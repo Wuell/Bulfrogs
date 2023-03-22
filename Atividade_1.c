@@ -3,8 +3,12 @@
 int main()
 {
     printf("Nestor Felipe Borges do Carmo\n");
-    printf("Aluno do curso de Engenharia da Computação\n");
+    printf("Aluno do curso de Engenharia da Computaï¿½ï¿½o\n");
     printf("matricula 202206840052\n");
+
+    printf("Wellerson Veloso Nascimento\n");
+    printf("Aluno do curso de Engenharia da ComputaÃ§Ã£o\n");
+    printf("Matricula: 202206840045\n");
 
     return 0;
 }
