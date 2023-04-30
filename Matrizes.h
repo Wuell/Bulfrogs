@@ -9,6 +9,8 @@ struct complexo //Define os complexos
 
 typedef struct complexo complexo;
 
+void print_Opmatriz(int tamanho, complexo matrizB[100][100], complexo matrizA[100][100], complexo matrizR[100][100]); //Função de printar para operação de duas matrizes
+
 void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[100][100]);
 
 // TRANSPOSTA
@@ -30,3 +32,15 @@ void teste_hermitiana();
 complexo Hermitiana(int tamanho, complexo matriz[100][100],complexo matrizHermt[100][100]);
 
 #endif
+
+// SOMA
+
+void teste_soma();
+
+complexo Soma(int tamanho, complexo MatrizA[100][100], complexo MatrizB[100][100], complexo MatrizR[100][100]);
+
+// SUBTRAÇÃO
+
+void teste_subtracao();
+
+complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100]);
