@@ -324,19 +324,12 @@ complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][
         for (int j = 0; j < tamanho; j++){
             ans[i][j].re = 0;
             ans[i][j].im = 0;
-            printf("\ni %d j %d\n", &i, &j);
 
-            for (int i2 = i; i2 < tamanho; i2++){
-                for (int j2 = j; j2 < tamanho; j2++){
-                    ans[i][j].re += ma[i][j2].re * mb[i2][j].re;
-                    ans[i][j].im += ma[i][j2].im * mb[i2][j].im;
-                    
-                    printf("\n i2 %d j2 %d\n", &i2, &j2);
-
-                }
+            for (int j2 = 0; j2 < tamanho; j2++){
+                ans[i][j].re += ma[i][j2].re * mb[j2][j].re + (ma[i][j2].im * mb[j2][j].im ) * -1;
+                ans[i][j].im += ma[i][j2].im * mb[j2][j].re + ma[i][j2].re * mb[j2][j].im;
+                
             }
-
-            printf("\n real = %f | imaginario j%f", &ans[i][j].re, & ans[i][j].im);
 
         }    
 
