@@ -286,3 +286,59 @@ void teste_subtracao()
 
     print_Opmatriz(tamanho, mA, mB, mR);
 }
+
+//Produto matricial
+void teste_produto_matricial(){
+    complexo ex1[100][100];
+    ex1[0][0] = (complexo){1, -1};
+    ex1[0][1] = (complexo){2, -2};
+    ex1[0][2] = (complexo){3, -3};
+    ex1[1][0] = (complexo){4, -4};
+    ex1[1][1] = (complexo){5, -5};
+    ex1[1][2] = (complexo){6, -6};
+    ex1[2][0] = (complexo){7, -7};
+    ex1[2][1] = (complexo){8, -8};
+    ex1[2][2] = (complexo){9, -9};
+
+    complexo ex2[100][100];              //MATRIZ ex2 É O SUBTRAENDO
+    ex2[0][0] = (complexo){-2, 2};
+    ex2[0][1] = (complexo){-2, -6};
+    ex2[0][2] = (complexo){2, -3};
+    ex2[1][0] = (complexo){0.4, -8};
+    ex2[1][1] = (complexo){0.3, -5};
+    ex2[1][2] = (complexo){-5, -45};
+    ex2[2][0] = (complexo){-15, 10};
+    ex2[2][1] = (complexo){45, -6};
+    ex2[2][2] = (complexo){-1, 99};
+
+    complexo ans[100][100];
+    Produto_matricial( 3, ex1, ex2, ans);
+
+}
+
+complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][100], complexo ans[100][100]){
+
+    //complexo ans[100][100];
+
+    for (int i = 0; i < tamanho; i++ )
+        for (int j = 0; j < tamanho; j++){
+            ans[i][j].re = 0;
+            ans[i][j].im = 0;
+            printf("\ni %d j %d\n", &i, &j);
+
+            for (int i2 = i; i2 < tamanho; i2++){
+                for (int j2 = j; j2 < tamanho; j2++){
+                    ans[i][j].re += ma[i][j2].re * mb[i2][j].re;
+                    ans[i][j].im += ma[i][j2].im * mb[i2][j].im;
+                    
+                    printf("\n i2 %d j2 %d\n", &i2, &j2);
+
+                }
+            }
+
+            printf("\n real = %f | imaginario j%f", &ans[i][j].re, & ans[i][j].im);
+
+        }    
+
+    return ans[100][100];
+}
