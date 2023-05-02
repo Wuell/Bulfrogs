@@ -46,8 +46,18 @@ void teste_subtracao();
 
 complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100]);
 
-// Produto 
+//PRODUTO Escalar
+
+void teste_produto_escalar();
+
+float Produto_escalar(complexo ma, complexo mb);
+
+//PRODUTO MATRICIAL
 
 void teste_produto_matricial();
 
 complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][100], complexo ans[100][100]);
+
+//TESTE GERAL
+
+void Teste_geral();
