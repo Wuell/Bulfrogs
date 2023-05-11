@@ -5,7 +5,7 @@
 
 
 
-//PRINT_MATRIZ
+/// PRINT_MATRIZ
 
 void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[100][100]) //Função de printar mudanças em uma matriz
 {
@@ -14,9 +14,9 @@ void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[10
     for (int i = 0 ; i < tamanho; i++) // PRINT DO OPERANDO
     {
         for (int j = 0 ; j < tamanho; j++)
-            printf ("| %.2lf + (%.2lf)i | ", matriz[i][j].re, matriz[i][j].im);
+            printf ("| %.2lf + (%.2lf)j | ", matriz[i][j].re, matriz[i][j].im);
 
-    printf ("\n");
+    printf ("\n\n");
     }
 
     printf("Operando: R=...\n\n");
@@ -24,7 +24,7 @@ void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[10
     for (int i = 0 ; i < tamanho; i++) // PRINT DO RESULTADO
     {
         for (int j = 0 ; j < tamanho; j++)   
-            printf ("| %.2lf + (%.2lf)i | ", matriz_mod[i][j].re, matriz_mod[i][j].im); 
+            printf ("| %.2lf + (%.2lf)j | ", matriz_mod[i][j].re, matriz_mod[i][j].im); 
 
     printf ("\n\n");
     }
@@ -41,7 +41,7 @@ void print_Opmatriz(int tamanho, complexo matrizA[100][100], complexo matrizB[10
     for (int i = 0 ; i < tamanho; i++) // PRINT DO OPERANDO
     {
         for (int j = 0 ; j < tamanho; j++)
-            printf ("| %.2lf + (%.2lf)i | ", matrizA[i][j].re, matrizA[i][j].im);
+            printf ("| %.2lf + (%.2lf)j | ", matrizA[i][j].re, matrizA[i][j].im);
 
     printf ("\n\n");
     }
@@ -51,7 +51,7 @@ void print_Opmatriz(int tamanho, complexo matrizA[100][100], complexo matrizB[10
     for (int i = 0 ; i < tamanho; i++) // PRINT DO OPERANDO
     {
         for (int j = 0 ; j < tamanho; j++)
-            printf ("| %.2lf + (%.2lf)i | ", matrizB[i][j].re, matrizB[i][j].im);
+            printf ("| %.2lf + (%.2lf)j | ", matrizB[i][j].re, matrizB[i][j].im);
 
     printf ("\n\n");
     }
@@ -61,7 +61,7 @@ void print_Opmatriz(int tamanho, complexo matrizA[100][100], complexo matrizB[10
     for (int i = 0 ; i < tamanho; i++) // PRINT DO RESULTADO
     {
         for (int j = 0 ; j < tamanho; j++)   
-            printf ("| %.2lf + (%.2lf)i | ", matrizR[i][j].re, matrizR[i][j].im); 
+            printf ("| %.2lf + (%.2lf)j | ", matrizR[i][j].re, matrizR[i][j].im); 
 
     printf ("\n\n");
     }
@@ -69,7 +69,7 @@ void print_Opmatriz(int tamanho, complexo matrizA[100][100], complexo matrizB[10
 
 
 
-//MATRIZ CONJUGADA
+/// MATRIZ CONJUGADA
 
 complexo Conjugada(int tamanho, complexo matriz[100][100], complexo matrizConj[100][100])
 {
@@ -110,7 +110,7 @@ void teste_conjugada()
 
 
 
-// TRANSPOSTA 
+/// MATRIZ TRANSPOSTA 
 
 complexo Transposta (int tamanho, complexo matriz[100][100], complexo matrizT[100][100])
 {
@@ -150,7 +150,7 @@ void teste_transposta()
 
 
 
-//MATRIZ HERMITIANA
+/// MATRIZ HERMITIANA
 
 complexo Hermitiana(int tamanho, complexo matriz[100][100],complexo matrizHermt[100][100])
 {   
@@ -189,7 +189,7 @@ void teste_hermitiana()
 
 
 
-//SOMA
+/// SOMA
 
 complexo Soma(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100])
 {
@@ -236,11 +236,7 @@ void teste_soma()
     print_Opmatriz(tamanho, mA, mB, mR);
 }
 
-
-
-
-
-//SUBTRAÇÃO
+/// SUBTRAÇÃO
 
 complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100])
 {
@@ -287,58 +283,140 @@ void teste_subtracao()
     print_Opmatriz(tamanho, mA, mB, mR);
 }
 
-//Produto matricial
-void teste_produto_matricial(){
-    complexo ex1[100][100];
-    ex1[0][0] = (complexo){1, -1};
-    ex1[0][1] = (complexo){2, -2};
-    ex1[0][2] = (complexo){3, -3};
-    ex1[1][0] = (complexo){4, -4};
-    ex1[1][1] = (complexo){5, -5};
-    ex1[1][2] = (complexo){6, -6};
-    ex1[2][0] = (complexo){7, -7};
-    ex1[2][1] = (complexo){8, -8};
-    ex1[2][2] = (complexo){9, -9};
 
-    complexo ex2[100][100];              //MATRIZ ex2 É O SUBTRAENDO
-    ex2[0][0] = (complexo){-2, 2};
-    ex2[0][1] = (complexo){-2, -6};
-    ex2[0][2] = (complexo){2, -3};
-    ex2[1][0] = (complexo){0.4, -8};
-    ex2[1][1] = (complexo){0.3, -5};
-    ex2[1][2] = (complexo){-5, -45};
-    ex2[2][0] = (complexo){-15, 10};
-    ex2[2][1] = (complexo){45, -6};
-    ex2[2][2] = (complexo){-1, 99};
+/// PRODUTO ESCALAR
+
+void teste_produto_escalar(){
+    int tamanho = 2;
+    complexo ma[100]; 
+    ma[0] = (complexo){5,-3};
+    ma[1] = (complexo){2,9};
+
+    complexo mb[100];
+    mb[0] = (complexo){6,4};
+    mb[1] = (complexo){10,5};
+
+    complexo ans=Produto_escalar(tamanho,ma,mb);
+
+    printf("======Teste da Produto Escalar======\n\n");
+    printf("Operando: A=...\n\n");
+
+    for (int i = 0 ; i < tamanho; i++) // PRINT DO OPERANDO
+    {
+        printf ("| %.2lf + (%.2lf)j | ", ma[i].re, ma[i].im);
+
+    printf ("\n\n");
+    }
+
+    printf("Operando: B=...\n\n");
+
+    for (int i = 0 ; i < tamanho; i++) // PRINT DO OPERANDO
+    { 
+        printf ("| %.2lf + (%.2lf)j | ", mb[i].re, mb[i].im);
+
+    printf ("\n\n");
+    }
+
+    printf("Operando: R=...\n\n");
+
+    printf ("| %.2lf + (%.2lf)j | \n\n", ans.re, ans.im); 
+    
+}
+
+complexo Produto_escalar(int tamanho, complexo ma[100], complexo mb[100]){
+    
+    complexo intermed[tamanho];
+    complexo ans;
+
+    for(int j = 0; j<tamanho; j++){
+        
+        intermed[j]=produto_complexo(ma[j],mb[j]);
+
+    }
+
+    ans.re=0;
+    ans.im=0;
+
+    for(int i = 0; i<tamanho; i++){
+
+    ans.re += intermed[i].re;
+    ans.im += intermed[i].im;
+
+    }
+    return ans;
+}
+
+/// PRODUTO COMPLEXO
+
+complexo produto_complexo(complexo ma, complexo na){
+
+    complexo ans;
+    ans.re=(ma.re * na.re) - (ma.im * na.im);
+    ans.im=(ma.re * na.im) + (na.re * ma.im);
+
+    return ans;
+
+}
+
+
+void teste_produto_complexo(){
+
+    complexo ma = {1,1};
+    complexo na = {1,-15};
+    complexo ans;
+    
+    ans = produto_complexo(ma,na);
+    printf("%.2lf + (%.2lf)j\n", ans.re, ans.im);
+
+
+}
+
+/// PRODUTO MATRICIAL
+void teste_produto_matricial(){
+    complexo ex1[100][100] = {{(complexo){1, -1}, (complexo){2, -2}, (complexo){3, -3}},
+                              {(complexo){4, -4}, (complexo){5, -5}, (complexo){6, -6}},
+                              {(complexo){7, -7}, (complexo){8, -8}, (complexo){9, -9}}
+                                };
+    complexo ex2[100][100] = {{(complexo){-2, 2},   (complexo){-2, -6},  (complexo){2, -3}},
+                              {(complexo){0.4, -8}, (complexo){0.3, -5}, (complexo){-5, -45}},
+                              {(complexo){-15, 10}, (complexo){45, -6},  (complexo){-1, 99}}
+                                };
 
     complexo ans[100][100];
     Produto_matricial( 3, ex1, ex2, ans);
+
+    printf("\n======Teste do produto matricial======\n\n");
+    print_Opmatriz(3, ex1, ex2, ans);
 
 }
 
 complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][100], complexo ans[100][100]){
 
-    //complexo ans[100][100];
-
-    for (int i = 0; i < tamanho; i++ )
+    for (int i = 0; i < tamanho; i++ ){
         for (int j = 0; j < tamanho; j++){
             ans[i][j].re = 0;
             ans[i][j].im = 0;
-            printf("\ni %d j %d\n", &i, &j);
 
-            for (int i2 = i; i2 < tamanho; i2++){
-                for (int j2 = j; j2 < tamanho; j2++){
-                    ans[i][j].re += ma[i][j2].re * mb[i2][j].re;
-                    ans[i][j].im += ma[i][j2].im * mb[i2][j].im;
-                    
-                    printf("\n i2 %d j2 %d\n", &i2, &j2);
-
-                }
+            for (int j2 = 0; j2 < tamanho; j2++){
+                ans[i][j].re += ma[i][j2].re * mb[j2][j].re + (ma[i][j2].im * mb[j2][j].im ) * -1;
+                ans[i][j].im += ma[i][j2].im * mb[j2][j].re + ma[i][j2].re * mb[j2][j].im;
+                
             }
 
-            printf("\n real = %f | imaginario j%f", &ans[i][j].re, & ans[i][j].im);
-
         }    
-
+    }
     return ans[100][100];
+}
+
+/// TESTE GERAL
+void Teste_geral(){
+
+    teste_transposta();
+    teste_conjugada();
+    teste_hermitiana();
+    teste_soma();
+    teste_subtracao();
+    teste_produto_escalar();
+    teste_produto_matricial();
+
 }
