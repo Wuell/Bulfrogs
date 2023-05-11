@@ -46,7 +46,6 @@ void teste_subtracao();
 
 complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100]);
 
-<<<<<<< HEAD
 /// PRODUTO Escalar
 
 void teste_produto_escalar();
@@ -54,21 +53,11 @@ void teste_produto_escalar();
 complexo Produto_escalar(int tamanho,complexo ma[100], complexo mb[100]);
 
 /// PRODUTO MATRICIAL
-=======
-//PRODUTO Escalar
-
-void teste_produto_escalar();
-
-float Produto_escalar(complexo ma, complexo mb);
-
-//PRODUTO MATRICIAL
->>>>>>> 4711d8558fb3be7ff9e01fd2b952bbd1bbb201b2
 
 void teste_produto_matricial();
 
 complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][100], complexo ans[100][100]);
 
-<<<<<<< HEAD
 /// TESTE GERAL
 
 void Teste_geral();
@@ -78,8 +67,3 @@ void Teste_geral();
 void teste_produto_complexo();
 
 complexo produto_complexo(complexo ma, complexo na);
-=======
-//TESTE GERAL
-
-void Teste_geral();
->>>>>>> 4711d8558fb3be7ff9e01fd2b952bbd1bbb201b2
