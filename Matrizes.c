@@ -236,7 +236,11 @@ void teste_soma()
     print_Opmatriz(tamanho, mA, mB, mR);
 }
 
+<<<<<<< HEAD
 /// SUBTRAÇÃO
+=======
+//SUBTRAÇÃO
+>>>>>>> 4711d8558fb3be7ff9e01fd2b952bbd1bbb201b2
 
 complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100])
 {
@@ -283,6 +287,7 @@ void teste_subtracao()
     print_Opmatriz(tamanho, mA, mB, mR);
 }
 
+<<<<<<< HEAD
 
 /// PRODUTO ESCALAR
 
@@ -372,6 +377,28 @@ void teste_produto_complexo(){
 }
 
 /// PRODUTO MATRICIAL
+=======
+//PRODUTO ESCALAR
+void teste_produto_escalar(){
+    complexo ma = {5,-4};
+    complexo mb = {5,4};
+
+
+    printf("======Teste do produto escalar======\n");
+    printf("Operando: A = \n\n%.2fd + (%.2fd)i\n\nOperando: B = \n\n%.2f + (%.2f)i\n\n", ma.re, ma.im, mb.re, mb.im);
+    printf("Resultado: R = %.2f\n", Produto_escalar(ma,mb));
+}
+
+float Produto_escalar(complexo ma, complexo mb){
+
+    float ans = ma.re * mb.re + ma.im * mb.im;
+
+    return ans;
+}
+
+
+//PRODUTO MATRICIAL
+>>>>>>> 4711d8558fb3be7ff9e01fd2b952bbd1bbb201b2
 void teste_produto_matricial(){
     complexo ex1[100][100] = {{(complexo){1, -1}, (complexo){2, -2}, (complexo){3, -3}},
                               {(complexo){4, -4}, (complexo){5, -5}, (complexo){6, -6}},
@@ -385,7 +412,11 @@ void teste_produto_matricial(){
     complexo ans[100][100];
     Produto_matricial( 3, ex1, ex2, ans);
 
+<<<<<<< HEAD
     printf("\n======Teste do produto matricial======\n\n");
+=======
+    printf("\n======Teste do produto matricial======\n");
+>>>>>>> 4711d8558fb3be7ff9e01fd2b952bbd1bbb201b2
     print_Opmatriz(3, ex1, ex2, ans);
 
 }
@@ -408,7 +439,11 @@ complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][
     return ans[100][100];
 }
 
+<<<<<<< HEAD
 /// TESTE GERAL
+=======
+//TESTE GERAL
+>>>>>>> 4711d8558fb3be7ff9e01fd2b952bbd1bbb201b2
 void Teste_geral(){
 
     teste_transposta();
