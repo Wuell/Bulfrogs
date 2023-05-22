@@ -1,24 +1,34 @@
-all: programa
+BUILD = ./build
+SRC = ./src
+SRCMt = ./src/matrizes
 
-programa: matrizes.o main.o
+aplicacao: teste doc
 
+cria_pasta:
+
+	mkdir -p build
+
+teste: cria_pasta $(BUILD)/matrizes.o $(BUILD)/main.o 
+	
 	@echo "Compilando executavel programa.exe..."
-	gcc -o programa matrizes.o main.o
+	gcc -o $(BUILD)/aplicacao $(BUILD)/matrizes.o $(BUILD)/main.o
 
-matrizes.o: matrizes.c matrizes.h
+$(BUILD)/matrizes.o: $(SRCMt)/Matrizes.c $(SRCMt)/Matrizes.h
 
 	@echo "Compilando a biblioteca matrizes..."
-	gcc -o matrizes.o -c matrizes.c -W -Wall -pedantic
+	gcc -o $(BUILD)/matrizes.o -c $(SRCMt)/Matrizes.c -W -Wall -pedantic
 
-main.o: main.c
+$(BUILD)/main.o: $(SRC)/main.c
 
 	@echo "Compilando main.c..."
-	gcc -o main.o -c main.c -W -Wall -pedantic
+	gcc -o $(BUILD)/main.o -c $(SRC)/main.c -I$(SRCMt)  -W -Wall -pedantic
 
 clean:
 
-	rm -rf *.o
+	rm -rf aplicacao
+	rm -rf doc
+	rm -rf build
 
-mrproper: clean
+make doc:
 
-	rm -rf programa
+	doxygen Doxyfile
