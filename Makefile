@@ -30,5 +30,6 @@ clean:
 	rm -rf build
 
 make doc:
-
+	
 	doxygen Doxyfile
+	

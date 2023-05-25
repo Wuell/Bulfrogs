@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Matrizes.h"
+/// @file Matrizes.c
 
-/// PRINT_MATRIZ
-
-
-
+// PRINT_MATRIZ
 void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[100][100]) // Função de printar mudanças em uma matriz
 {
     printf("Operando: A=...\n\n");
@@ -62,7 +60,8 @@ void print_Opmatriz(int tamanho, complexo matrizA[100][100], complexo matrizB[10
     }
 }
 
-/// MATRIZ CONJUGADA
+// MATRIZ CONJUGADA
+
 
 complexo Conjugada(int tamanho, complexo matriz[100][100], complexo matrizConj[100][100])
 {
@@ -99,7 +98,7 @@ void teste_conjugada()
     print_matriz(tamanho, m_teste, n_teste);
 }
 
-/// MATRIZ TRANSPOSTA
+// MATRIZ TRANSPOSTA
 
 complexo Transposta(int tamanho, complexo matriz[100][100], complexo matrizT[100][100])
 {
@@ -135,7 +134,7 @@ void teste_transposta()
     print_matriz(tamanho, m, n);
 }
 
-/// MATRIZ HERMITIANA
+// MATRIZ HERMITIANA
 
 complexo Hermitiana(int tamanho, complexo matriz[100][100], complexo matrizHermt[100][100])
 {
@@ -216,7 +215,7 @@ void teste_soma()
     print_Opmatriz(tamanho, mA, mB, mR);
 }
 
-/// SUBTRAÇÃO
+// SUBTRAÇÃO
 
 complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100])
 {
@@ -263,7 +262,7 @@ void teste_subtracao()
     print_Opmatriz(tamanho, mA, mB, mR);
 }
 
-/// PRODUTO ESCALAR
+// PRODUTO ESCALAR
 
 void teste_produto_escalar()
 {
@@ -326,8 +325,7 @@ complexo Produto_escalar(int tamanho, complexo ma[100], complexo mb[100])
     return ans;
 }
 
-/// PRODUTO COMPLEXO
-
+// PRODUTO COMPLEXO (adicional)
 complexo produto_complexo(complexo ma, complexo na)
 {
 
@@ -349,12 +347,13 @@ void teste_produto_complexo()
     printf("%.2lf + (%.2lf)j\n", ans.re, ans.im);
 }
 
-/// PRODUTO MATRICIAL
+// PRODUTO MATRICIAL
 void teste_produto_matricial()
 {
     complexo ex1[100][100] = {{(complexo){1, -1}, (complexo){2, -2}, (complexo){3, -3}},
                               {(complexo){4, -4}, (complexo){5, -5}, (complexo){6, -6}},
                               {(complexo){7, -7}, (complexo){8, -8}, (complexo){9, -9}}};
+
     complexo ex2[100][100] = {{(complexo){-2, 2}, (complexo){-2, -6}, (complexo){2, -3}},
                               {(complexo){0.4, -8}, (complexo){0.3, -5}, (complexo){-5, -45}},
                               {(complexo){-15, 10}, (complexo){45, -6}, (complexo){-1, 99}}};
@@ -386,7 +385,7 @@ complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][
     return ans[100][100];
 }
 
-/// TESTE GERAL
+// TESTE GERAL
 void Teste_geral()
 {
 
@@ -397,4 +396,5 @@ void Teste_geral()
     teste_subtracao();
     teste_produto_escalar();
     teste_produto_matricial();
+
 }
