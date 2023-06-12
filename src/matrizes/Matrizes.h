@@ -181,6 +181,27 @@ complexo produto_complexo(complexo ma, complexo na);
 
 
 
+
+
+//-------------------------SVD
+///Teste da funcao svd usando a biblioteca gsl
+void Teste_calc_svd();
+
+void Aux_teste_svd(int M, int N, complexo A[100][100]);
+/**
+ * @brief calcula a decomposicao do valor singular (svd) da matriz dada a[M][N], sendo que M = N.
+ * @param[in] tamanho 
+ * @param[in] a 
+ * @param[in]
+ * @param[in]
+ * @return matrizes u, v e s
+ */
+void Calc_svd(int M, int N, complexo Au[100][100], complexo V[100][100], complexo S[100]);
+
+
+
+
+
 //-------------------------TESTE GERAL
 
 ///Integra todos os testes das funcoes para serem executados de uma so vez.
