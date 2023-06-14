@@ -393,84 +393,87 @@ complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][
 //SVD
 void Aux_teste_svd(int M, int N, complexo A[100][100]){
     
-    printf("Matriz operada\n");
+    printf("Matriz operando : A = ...\n\n");
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N; j++){
-            printf("%f ", A[i][j].re);
+            printf("| %.2f + ", A[i][j].re);
+            printf("%.2fj |", A[i][j].im);
         }
-        printf("\n");
+        printf("\n\n");
     }
-
+  
     if (M < N){
-        printf("Nao e possivel realizar a operacao com M < N\n");
+        printf("((((((Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).))))))\n");
         return;
     }
-    
+     
     complexo V[100][100];
     complexo S[100];
 
     Calc_svd(M, N, A, V, S);
 
-    printf("\n\n Matrix U\n");
+    printf("\n Matrix U = ...\n\n");
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N; j++){
-            printf("%f ", A[i][j].re);
-            //printf("\neu vim aqui na U\n");
+            printf("| %.2f |", A[i][j].re);
         }
-        printf("\n");
+        printf("\n\n");
     }
 
-    printf("\n\n Matrix V\n");
+    printf("\n Matrix V = ...\n\n");
     for (int i = 0; i < N; i++){
         for (int j = 0; j < N; j++){
-            printf("%f ", V[i][j].re);
-            //printf("\neu vim aqui no V\n");
+            printf("| %.2f |", V[i][j].re);
         }
-        printf("\n");
+        printf("\n\n");
     }
 
-    printf("\n\n vetor S\n");
+    printf("\n vetor S = ...\n\n");
     for (int i = 0; i < M; i++){       
-        printf("%f ", S[i].re);
-        //printf("\neu vim aqui no S\n");
+        printf("| %.2f |", S[i].re);
     }
     printf("\n\n");
 }
 
 void Teste_calc_svd(){
-    printf("\n======Teste da SVD======\n\n");
+    printf("\n======Teste da SVD======\n");
     srand(time(0));
 
-    printf("\nMatriz 3 X 2\n\n");
+    int MAX = 100;
+    printf("\n______Matriz 3 X 2______\n\n");
     complexo A0[100][100];//Matriz 3x2
-    A0[0][0] = (complexo){rand(), 0}; A0[0][1] = (complexo){rand(), 0}; 
-    A0[1][0] = (complexo){rand(), 0}; A0[1][1] = (complexo){rand(), 0}; 
-    A0[2][0] = (complexo){rand(), 0}; A0[2][1] = (complexo){rand(), 0}; 
+    for (int i = 0; i < 3; i ++){
+        for (int j = 0; j < 2; j++){
+            A0[i][j] = (complexo){rand() % MAX, 0.0};
+        }
+    }
     Aux_teste_svd(3, 2, A0);
 
-    printf("\nMatriz 4 X 4\n\n");
+    printf("\n______Matriz 4 X 4______\n\n");
     complexo A1[100][100];//Matriz 4x4
-    A1[0][0] = (complexo){rand(), 0}; A1[0][1] = (complexo){rand(), 0}; A1[0][2] = (complexo){rand(), 0}; A1[0][3] = (complexo){rand(), 0};
-    A1[1][0] = (complexo){rand(), 0}; A1[1][1] = (complexo){rand(), 0}; A1[1][2] = (complexo){rand(), 0}; A1[1][3] = (complexo){rand(), 0};
-    A1[2][0] = (complexo){rand(), 0}; A1[2][1] = (complexo){rand(), 0}; A1[2][2] = (complexo){rand(), 0}; A1[2][3] = (complexo){rand(), 0};
-    A1[3][0] = (complexo){rand(), 0}; A1[3][1] = (complexo){rand(), 0}; A1[3][2] = (complexo){rand(), 0}; A1[3][3] = (complexo){rand(), 0};
+    for (int i = 0; i < 4; i ++){
+        for (int j = 0; j < 4; j++){
+            A1[i][j] = (complexo){rand() % MAX, 0.0};
+        }
+    }
     Aux_teste_svd(4, 4, A1);
 
-    printf("\nMatriz 6 X 5\n\n");
+    printf("\n______Matriz 6 X 5______\n\n");
     complexo A2[100][100];//Matriz 6x5
-    A2[0][0] = (complexo){rand(), 0}; A2[0][1] = (complexo){rand(), 0}; A2[0][2] = (complexo){rand(), 0};  A2[0][3] = (complexo){rand(), 0}; A2[0][4] = (complexo){rand(), 0};
-    A2[1][0] = (complexo){rand(), 0}; A2[1][1] = (complexo){rand(), 0}; A2[1][2] = (complexo){rand(), 0};  A2[1][3] = (complexo){rand(), 0}; A2[0][4] = (complexo){rand(), 0};
-    A2[2][0] = (complexo){rand(), 0}; A2[2][1] = (complexo){rand(), 0}; A2[2][2] = (complexo){rand(), 0};  A2[2][3] = (complexo){rand(), 0}; A2[0][4] = (complexo){rand(), 0};
-    A2[3][0] = (complexo){rand(), 0}; A2[3][1] = (complexo){rand(), 0}; A2[3][2] = (complexo){rand(), 0};  A2[3][3] = (complexo){rand(), 0}; A2[3][4] = (complexo){rand(), 0};
-    A2[4][0] = (complexo){rand(), 0}; A2[4][1] = (complexo){rand(), 0}; A2[4][2] = (complexo){rand(), 0};  A2[4][3] = (complexo){rand(), 0}; A2[4][4] = (complexo){rand(), 0};
-    A2[5][0] = (complexo){rand(), 0}; A2[5][1] = (complexo){rand(), 0}; A2[5][2] = (complexo){rand(), 0};  A2[5][3] = (complexo){rand(), 0}; A2[5][4] = (complexo){rand(), 0};
+    for (int i = 0; i < 6; i ++){
+        for (int j = 0; j < 5; j++){
+            A2[i][j] = (complexo){rand() % MAX, rand() % MAX};
+        }
+    }
     Aux_teste_svd(6, 5, A2);
 
-    printf("\nMatriz 5 X 6\n\n");
+    printf("\n______Matriz 5 X 6______\n\n");
     complexo A3[100][100];// Matriz 5x6
-    A3[0][0] = (complexo){rand(), 0}; A3[0][1] = (complexo){rand(), 0}; A3[0][2] = (complexo){rand(), 0};
-    A3[1][0] = (complexo){rand(), 0}; A3[1][1] = (complexo){rand(), 0}; A3[1][2] = (complexo){rand(), 0};
-    A3[2][0] = (complexo){rand(), 0}; A3[2][1] = (complexo){rand(), 0}; A3[2][2] = (complexo){rand(), 0};
+    for (int i = 0; i < 5; i ++){
+        for (int j = 0; j < 6; j++){
+            A3[i][j] = (complexo){rand() % MAX, 0.0};
+        }
+    }
     Aux_teste_svd(5, 6, A3);
 /*
 */
@@ -478,15 +481,14 @@ void Teste_calc_svd(){
 
 void Calc_svd(int M, int N, complexo Au[100][100], complexo V[100][100], complexo S[100]){
     if (M < N){
-        printf("Não é possivel  realizar a operação com M sendo menor que N.\n");
+        printf("((((((Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).))))))\n");
         return;
     }
     for(int i = 0; i < M; i++){
-        for(int j = 0; j < N; i++){
-
-            if (Au[i][j].im > 0 || Au[i][j].im < 0){
-                printf("A funcao so calcula numeros reais, entao somente será calculada a SVD da parte real da matriz\n");
-                j = M+1;
+        for(int j = 0; j < N; j++){
+            if (Au[i][j].im != (double) 0){
+                printf("\n------So ha suporte a matrizes reais, entao somente sera calculada a SVD da parte real da matriz------\n");
+                i = M+1;
                 break;
             }
         }
