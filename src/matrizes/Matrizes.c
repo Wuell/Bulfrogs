@@ -7,264 +7,322 @@
 
 /// @file Matrizes.c
 
-// PRINT_MATRIZ
-void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[100][100]) // Função de printar mudanças em uma matriz
-{
-    printf("Operando: A=...\n\n");
+// matrix handle
+bfgs_matrix matrix_alloc(int M, int N){
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO OPERANDO
-    {
-        for (int j = 0; j < tamanho; j++)
-            printf("| %.2lf + (%.2lf)j | ", matriz[i][j].re, matriz[i][j].im);
+    bfgs_matrix data = {.data = (complexo *)malloc(M * N  * sizeof(complexo))};
+    data.M = M;
+    data.N = N;
 
-        printf("\n\n");
-    }
+    return data;
+}
 
-    printf("Operando: R=...\n\n");
+void matrix_free(bfgs_matrix m){
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO RESULTADO
-    {
-        for (int j = 0; j < tamanho; j++)
-            printf("| %.2lf + (%.2lf)j | ", matriz_mod[i][j].re, matriz_mod[i][j].im);
+    free(m.data);
 
+}
+
+complexo matrix_get(bfgs_matrix m, int M, int N){
+
+    int Pn = ((M + 1) * m.N) - m.N + N + 1;
+    
+    //printf("Pn = %d ", Pn);
+    return m.data[Pn - 1];
+}
+
+void matrix_change(bfgs_matrix m, int M, int N, complexo v){
+
+    int Pn = ((M + 1) * m.N) - m.N + N + 1;
+    m.data[Pn-1] = v;
+}
+
+void matrix_print(bfgs_matrix ma){
+
+    for (int i = 0; i < ma.M; i++){
+        for (int j = 0; j < ma.N; j++){
+            printf("| %.2f + %.2f |", matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
+        }
         printf("\n\n");
     }
 }
 
-void print_Opmatriz(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100]) // Função de printar para operação de duas matrizes
+//vector handle
+bfgs_vector vector_alloc(int len){
+    
+    bfgs_vector data = {.data = (complexo *)malloc(len  * sizeof(complexo))};
+    data.len = len;
+    data.is_alloc = 1;
+
+    return data;
+}
+
+void vector_free(bfgs_vector v){
+    free(v.data);
+}
+
+complexo vector_get(bfgs_vector v, int M){
+    return v.data[M];
+}
+
+void vector_change(bfgs_vector v, int M, complexo a){
+
+    v.data[M] = a;
+
+}
+
+void vector_print(bfgs_vector v){
+
+    for (int i = 0; i < v.len; i++){
+        printf("| %.2f + %.2f |", v.data[i].re, v.data[i].im);
+
+    }
+    printf("\n");
+
+}
+
+
+
+// PRINT_MATRIZ
+void matrix_op_print(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans) // Função de printar mudanças em uma matriz
 {
-    printf("Operando: A=...\n\n");
+    printf("\n\nOperando: A=...\n\n");
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO OPERANDO
-    {
-        for (int j = 0; j < tamanho; j++)
-            printf("| %.2lf + (%.2lf)j | ", matrizA[i][j].re, matrizA[i][j].im);
-
-        printf("\n\n");
-    }
-
+    matrix_print(ma);
+    
     printf("Operando: B=...\n\n");
+    matrix_print(mb);
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO OPERANDO
-    {
-        for (int j = 0; j < tamanho; j++)
-            printf("| %.2lf + (%.2lf)j | ", matrizB[i][j].re, matrizB[i][j].im);
+    printf("\n\nOperando: R=...\n\n");
+    matrix_print(ans);
+    
+}
 
-        printf("\n\n");
-    }
+void matrix_mod_print(bfgs_matrix m, bfgs_matrix ans) // Função de printar para operação de duas matrizes
+{
+    printf("\n\nOperando: A=...\n\n");
+    matrix_print(m);
 
     printf("Operando: R=...\n\n");
+    matrix_print(ans);
+   
+}
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO RESULTADO
-    {
-        for (int j = 0; j < tamanho; j++)
-            printf("| %.2lf + (%.2lf)j | ", matrizR[i][j].re, matrizR[i][j].im);
+// MATRIZ TRANSPOSTA
 
-        printf("\n\n");
+void Transposta(bfgs_matrix m, bfgs_matrix mt)
+{
+    for (int i = 0; i < m.M; i++){
+        for (int j = 0; j < m.N; j++){
+            
+            matrix_change(mt, i, j, matrix_get(m, j, i));
+        
+        }
     }
+}
+
+void teste_transposta()
+{
+    printf("\n\n======Teste da operacao Transposta======");
+    
+    int tamanho = 3;
+
+    bfgs_matrix m = matrix_alloc(tamanho, tamanho);
+    matrix_change(m, 0, 0, (complexo){1, 710});
+    matrix_change(m, 0, 1, (complexo){2, 520});
+    matrix_change(m, 0, 2, (complexo){3, 330});
+    matrix_change(m, 1, 0, (complexo){4, 240});
+    matrix_change(m, 1, 1, (complexo){5, 450});
+    matrix_change(m, 1, 2, (complexo){6, -60});
+    matrix_change(m, 2, 0, (complexo){7, -70});
+    matrix_change(m, 2, 1, (complexo){8, -80});
+    matrix_change(m, 2, 2, (complexo){9, -90});
+
+    bfgs_matrix mt = matrix_alloc(tamanho, tamanho);
+
+    Transposta(m, mt);
+    matrix_mod_print(m, mt);
+
+    matrix_free(m);
+    matrix_free(mt);
+
 }
 
 // MATRIZ CONJUGADA
 
 
-complexo Conjugada(int tamanho, complexo matriz[100][100], complexo matrizConj[100][100])
+void Conjugada(bfgs_matrix m, bfgs_matrix mc)
 {
-    for (int i = 0; i < tamanho; i++)
-        for (int j = 0; j < tamanho; j++)
+    for (int i = 0; i < m.M; i++){
+        for (int j = 0; j < m.N; j++)
         {
-            matrizConj[i][j].im = (-1) * matriz[i][j].im; // INVERTE O SINAL DA PARTE IMAGINARIA
-            matrizConj[i][j].re = matriz[i][j].re;
+            matrix_change(mc, i, j, (complexo) {matrix_get(m,i,j).re, matrix_get(m,i,j).im * -1});
         }
-
-    return matrizConj[100][100];
+    }
 }
 
 void teste_conjugada()
 {
+    printf("\n\n======Teste da operacao Conjugada======");
+
     int tamanho = 3;
     
-    complexo m_teste[100][100];
-    m_teste[0][0] = (complexo){1, -1};
-    m_teste[0][1] = (complexo){2, -2};
-    m_teste[0][2] = (complexo){3, -3};
-    m_teste[1][0] = (complexo){4, -4};
-    m_teste[1][1] = (complexo){5, -5};
-    m_teste[1][2] = (complexo){6, -6};
-    m_teste[2][0] = (complexo){7, -7};
-    m_teste[2][1] = (complexo){8, -8};
-    m_teste[2][2] = (complexo){9, -9};
+    bfgs_matrix m = matrix_alloc(tamanho, tamanho);
+    matrix_change(m, 0, 0, (complexo){1, -1});
+    matrix_change(m, 0, 1, (complexo){2, -2});
+    matrix_change(m, 0, 2, (complexo){3, -3});
+    matrix_change(m, 1, 0, (complexo){4, -4});
+    matrix_change(m, 1, 1, (complexo){5, -5});
+    matrix_change(m, 1, 2, (complexo){6, -6});
+    matrix_change(m, 2, 0, (complexo){7, -7});
+    matrix_change(m, 2, 1, (complexo){8, -8});
+    matrix_change(m, 2, 2, (complexo){9, -9});
 
-    complexo n_teste[100][100];
+    bfgs_matrix mc = matrix_alloc(tamanho, tamanho);
 
-    Conjugada(tamanho, m_teste, n_teste);
+    Conjugada(m, mc);
+    matrix_mod_print(m, mc);
 
-    printf("======Teste da operacao Conjugada======\n\n");
-
-    print_matriz(tamanho, m_teste, n_teste);
+    matrix_free(m);
+    matrix_free(mc);
 }
 
-// MATRIZ TRANSPOSTA
-
-complexo Transposta(int tamanho, complexo matriz[100][100], complexo matrizT[100][100])
-{
-    for (int i = 0; i < tamanho; i++)
-        for (int j = 0; j < tamanho; j++)
-        {
-            matrizT[j][i].re = matriz[i][j].re;
-            matrizT[j][i].im = matriz[i][j].im;
-        }
-    return matrizT[100][100];
-}
-
-void teste_transposta()
-{
-    int tamanho = 3;
-    complexo m[100][100];
-    m[0][0] = (complexo){1, 710};
-    m[0][1] = (complexo){2, 520};
-    m[0][2] = (complexo){3, 330};
-    m[1][0] = (complexo){4, 240};
-    m[1][1] = (complexo){5, 450};
-    m[1][2] = (complexo){6, -60};
-    m[2][0] = (complexo){7, -70};
-    m[2][1] = (complexo){8, -80};
-    m[2][2] = (complexo){9, -90};
-
-    complexo n[100][100];
-
-    Transposta(tamanho, m, n);
-
-    printf("======Teste da operacao Transposta======\n\n");
-
-    print_matriz(tamanho, m, n);
-}
 
 // MATRIZ HERMITIANA
 
-complexo Hermitiana(int tamanho, complexo matriz[100][100], complexo matrizHermt[100][100])
+void Hermitiana(bfgs_matrix m, bfgs_matrix h)
 {
-    complexo aux[100][100];
-    Conjugada(tamanho, matriz, aux);
-    Transposta(tamanho, aux, matrizHermt);
-
-    return matrizHermt[100][100];
+    bfgs_matrix aux = matrix_alloc(m.M, m.N);
+    Conjugada(m, aux);
+    Transposta(aux, h);
+    
 }
 
 void teste_hermitiana()
 {
+    printf("\n\n======Teste da operacao Hermitiana======");
+    
     int tamanho = 3;
-    complexo m_teste[100][100];
-    m_teste[0][0] = (complexo){1, -12};
-    m_teste[0][1] = (complexo){2, -62};
-    m_teste[0][2] = (complexo){3, -30};
-    m_teste[1][0] = (complexo){4, -80};
-    m_teste[1][1] = (complexo){5, -55};
-    m_teste[1][2] = (complexo){6, -45};
-    m_teste[2][0] = (complexo){7, -10};
-    m_teste[2][1] = (complexo){8, -60};
-    m_teste[2][2] = (complexo){9, -54};
 
-    complexo n_teste[100][100];
+    bfgs_matrix m = matrix_alloc(tamanho, tamanho);
+    matrix_change(m, 0, 0, (complexo){1, -12});
+    matrix_change(m, 0, 1, (complexo){2, -62});
+    matrix_change(m, 0, 2, (complexo){3, -30});
+    matrix_change(m, 1, 0, (complexo){4, -80});
+    matrix_change(m, 1, 1, (complexo){5, -55});
+    matrix_change(m, 1, 2, (complexo){6, -45});
+    matrix_change(m, 2, 0, (complexo){7, -10});
+    matrix_change(m, 2, 1, (complexo){8, -60});
+    matrix_change(m, 2, 2, (complexo){9, -54});
 
-    Hermitiana(tamanho, m_teste, n_teste);
+    bfgs_matrix h = matrix_alloc(tamanho, tamanho);
 
-    printf("======Teste da operacao Hermitiana======\n\n");
+    Hermitiana(m, h);
+    matrix_mod_print(m, h);
 
-    print_matriz(tamanho, m_teste, n_teste);
+    matrix_free(m);
+    matrix_free(h);
+
 }
 
 /// SOMA
 
-complexo Soma(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100])
+void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
 {
-    for (int i = 0; i < tamanho; i++)
-        for (int j = 0; j < tamanho; j++)
+    for (int i = 0; i < ma.M; i++)
+        for (int j = 0; j < ma.N; j++)
         {
-            matrizR[i][j].re = matrizA[i][j].re + matrizB[i][j].re;
-            matrizR[i][j].im = matrizA[i][j].im + matrizB[i][j].im;
+            matrix_change(ans, i, j,(complexo) {matrix_get(ma, i, j).re + matrix_get(mb, i, j).re, matrix_get(ma, i, j).im + matrix_get(mb, i, j).im});
         }
-    return matrizR[100][100];
 }
 
 void teste_soma()
 {
+    printf("\n\n======Teste da operacao Soma======");
+    
     int tamanho = 3;
-    complexo mA[100][100];
-    mA[0][0] = (complexo){2, 7};
-    mA[0][1] = (complexo){1, -5};
-    mA[0][2] = (complexo){4, 33};
-    mA[1][0] = (complexo){0.3, 24};
-    mA[1][1] = (complexo){0.5, 45};
-    mA[1][2] = (complexo){1, -6};
-    mA[2][0] = (complexo){2, -7};
-    mA[2][1] = (complexo){3, -8};
-    mA[2][2] = (complexo){9, -9};
+    bfgs_matrix ma = matrix_alloc(tamanho, tamanho);
+    ma.data[0] = (complexo){2, 7};
+    ma.data[1] = (complexo){1, -5};
+    ma.data[2] = (complexo){4, 33};
+    ma.data[3] = (complexo){0.3, 24};
+    ma.data[4] = (complexo){0.5, 45};
+    ma.data[5] = (complexo){1, -6};
+    ma.data[6] = (complexo){2, -7};
+    ma.data[7] = (complexo){3, -8};
+    ma.data[8] = (complexo){9, -9};
 
-    complexo mB[100][100];
-    mB[0][0] = (complexo){-2, 2};
-    mB[0][1] = (complexo){-2, -6};
-    mB[0][2] = (complexo){2, -3};
-    mB[1][0] = (complexo){0.4, -8};
-    mB[1][1] = (complexo){0.3, -5};
-    mB[1][2] = (complexo){-5, -45};
-    mB[2][0] = (complexo){-15, 10};
-    mB[2][1] = (complexo){45, -6};
-    mB[2][2] = (complexo){-1, 99};
+    bfgs_matrix mb = matrix_alloc(tamanho, tamanho);
+    mb.data[0] = (complexo){-2, 2};
+    mb.data[1] = (complexo){-2, -6};
+    mb.data[2] = (complexo){2, -3};
+    mb.data[3] = (complexo){0.4, -8};
+    mb.data[4] = (complexo){0.3, -5};
+    mb.data[5] = (complexo){-5, -45};
+    mb.data[6] = (complexo){-15, 10};
+    mb.data[7] = (complexo){45, -6};
+    mb.data[8] = (complexo){-1, 99};
 
-    complexo mR[100][100];
+    bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
 
-    Soma(tamanho, mA, mB, mR);
+    Soma(ma, mb, ans);
+    matrix_op_print(ma, mb, ans);
 
-    printf("======Teste da operacao Soma======\n\n");
-
-    print_Opmatriz(tamanho, mA, mB, mR);
+    matrix_free(ma);
+    matrix_free(mb);
+    matrix_free(ans);
 }
 
 // SUBTRAÇÃO
 
-complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100])
+void Subtracao(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
 {
-    for (int i = 0; i < tamanho; i++)
-        for (int j = 0; j < tamanho; j++)
+    for (int i = 0; i < ma.M; i++)
+        for (int j = 0; j < ma.N; j++)
         {
-            matrizR[i][j].re = matrizA[i][j].re - matrizB[i][j].re;
-            matrizR[i][j].im = matrizA[i][j].im - matrizB[i][j].im;
+            complexo a = {matrix_get(ma, i, j).re - matrix_get(mb, i, j).re, matrix_get(ma, i, j).im - matrix_get(mb, i, j).im};
+            matrix_change(ans, i, j, a);
         }
-    return matrizR[100][100];
+
 }
 
 void teste_subtracao()
 {
+    printf("======Teste da operacao Subtracao======");
     int tamanho = 3;
-    complexo mA[100][100]; // MATRIZ mA É O MINUENDO
-    mA[0][0] = (complexo){2, 7};
-    mA[0][1] = (complexo){1, -5};
-    mA[0][2] = (complexo){4, 33};
-    mA[1][0] = (complexo){0.3, 24};
-    mA[1][1] = (complexo){0.5, 45};
-    mA[1][2] = (complexo){1, -6};
-    mA[2][0] = (complexo){2, -7};
-    mA[2][1] = (complexo){3, -8};
-    mA[2][2] = (complexo){9, -9};
+    
+    bfgs_matrix ma = matrix_alloc(tamanho, tamanho); // MATRIZ mA É O MINUENDO
+    matrix_change(ma, 0, 0,(complexo){1, -5});
+    matrix_change(ma, 0, 1,(complexo){4, 33});
+    matrix_change(ma, 0, 2,(complexo){0.3, 4});
+    matrix_change(ma, 1, 0,(complexo){0.5, 5});
+    matrix_change(ma, 1, 1,(complexo){1, -6});
+    matrix_change(ma, 1, 2,(complexo){2, -7});
+    matrix_change(ma, 2, 0, (complexo){3, -8});
+    matrix_change(ma, 2, 1, (complexo){9, -9});
+    matrix_change(ma, 2, 2, (complexo){2, 7});
 
-    complexo mB[100][100]; // MATRIZ mB É O SUBTRAENDO
-    mB[0][0] = (complexo){-2, 2};
-    mB[0][1] = (complexo){-2, -6};
-    mB[0][2] = (complexo){2, -3};
-    mB[1][0] = (complexo){0.4, -8};
-    mB[1][1] = (complexo){0.3, -5};
-    mB[1][2] = (complexo){-5, -45};
-    mB[2][0] = (complexo){-15, 10};
-    mB[2][1] = (complexo){45, -6};
-    mB[2][2] = (complexo){-1, 99};
+    bfgs_matrix mb = matrix_alloc(tamanho, tamanho); // MATRIZ mB É O SUBTRAENDO
+    matrix_change(mb, 0, 0,(complexo){1, -5});
+    matrix_change(mb, 0, 1,(complexo){4, 33});
+    matrix_change(mb, 0, 2,(complexo){0.3, 4});
+    matrix_change(mb, 1, 0,(complexo){0.5, 5});
+    matrix_change(mb, 1, 1,(complexo){1, -6});
+    matrix_change(mb, 1, 2,(complexo){2, -7});
+    matrix_change(mb, 2, 0, (complexo){3, -8});
+    matrix_change(mb, 2, 1, (complexo){9, -9});
+    matrix_change(mb, 2, 2, (complexo){2, 7});
 
-    complexo mR[100][100];
 
-    Subtracao(tamanho, mA, mB, mR);
+    bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
 
-    printf("======Teste da operacao Subtracao======\n\n");
+    Subtracao(ma, mb, ans);
+    matrix_op_print(ma, mb, ans);
 
-    print_Opmatriz(tamanho, mA, mB, mR);
+    matrix_free(ma);
+    matrix_free(mb);
+    matrix_free(ans);
+
 }
 
 // PRODUTO ESCALAR
@@ -272,61 +330,59 @@ void teste_subtracao()
 void teste_produto_escalar()
 {
     int tamanho = 2;
-    complexo ma[100];
-    ma[0] = (complexo){5, -3};
-    ma[1] = (complexo){2, 9};
+    bfgs_vector va = vector_alloc(tamanho);
+    vector_change(va, 0, (complexo){5, -3});
+    vector_change(va, 1, (complexo){2, 9});
 
-    complexo mb[100];
-    mb[0] = (complexo){6, 4};
-    mb[1] = (complexo){10, 5};
+    bfgs_vector vb = vector_alloc(tamanho);
+    vector_change(vb, 0, (complexo){6, 4});
+    vector_change(vb, 1, (complexo){10, 5});
 
-    complexo ans = Produto_escalar(tamanho, ma, mb);
+    complexo ans = Produto_escalar(va, vb);
 
-    printf("======Teste da Produto Escalar======\n\n");
+    printf("\n\n======Teste da Produto Escalar======\n");
+
     printf("Operando: A=...\n\n");
+    vector_print(va);
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO OPERANDO
-    {
-        printf("| %.2lf + (%.2lf)j | ", ma[i].re, ma[i].im);
+    printf("\n\n");
 
-        printf("\n\n");
-    }
 
     printf("Operando: B=...\n\n");
+    vector_print(vb);
 
-    for (int i = 0; i < tamanho; i++) // PRINT DO OPERANDO
-    {
-        printf("| %.2lf + (%.2lf)j | ", mb[i].re, mb[i].im);
-
-        printf("\n\n");
-    }
+    printf("\n\n");
+    
 
     printf("Operando: R=...\n\n");
-
     printf("| %.2lf + (%.2lf)j | \n\n", ans.re, ans.im);
+
+    vector_free(va);
+    vector_free(vb);
 }
 
-complexo Produto_escalar(int tamanho, complexo ma[100], complexo mb[100])
+complexo Produto_escalar(bfgs_vector va, bfgs_vector vb)
 {
 
-    complexo intermed[tamanho];
+    bfgs_vector aux = vector_alloc(va.len);
     complexo ans;
 
-    for (int j = 0; j < tamanho; j++)
+    for (int i = 0; i < va.len; i++)
     {
-
-        intermed[j] = produto_complexo(ma[j], mb[j]);
+        vector_change(aux, i, produto_complexo(vector_get(va, i), vector_get(vb,i)));
     }
 
     ans.re = 0;
     ans.im = 0;
 
-    for (int i = 0; i < tamanho; i++)
+    for (int i = 0; i < va.len; i++)
     {
-
-        ans.re += intermed[i].re;
-        ans.im += intermed[i].im;
+        ans.re += vector_get(aux, i).re;
+        ans.im += vector_get(aux, i).im;
     }
+
+    vector_free(aux);
+
     return ans;
 }
 
@@ -341,6 +397,7 @@ complexo produto_complexo(complexo ma, complexo na)
     return ans;
 }
 
+/*
 void teste_produto_complexo()
 {
 
@@ -351,142 +408,156 @@ void teste_produto_complexo()
     ans = produto_complexo(ma, na);
     printf("%.2lf + (%.2lf)j\n", ans.re, ans.im);
 }
+*/
 
 // PRODUTO MATRICIAL
 void teste_produto_matricial()
 {
-    complexo ex1[100][100] = {{(complexo){1, -1}, (complexo){2, -2}, (complexo){3, -3}},
-                              {(complexo){4, -4}, (complexo){5, -5}, (complexo){6, -6}},
-                              {(complexo){7, -7}, (complexo){8, -8}, (complexo){9, -9}}};
-
-    complexo ex2[100][100] = {{(complexo){-2, 2}, (complexo){-2, -6}, (complexo){2, -3}},
-                              {(complexo){0.4, -8}, (complexo){0.3, -5}, (complexo){-5, -45}},
-                              {(complexo){-15, 10}, (complexo){45, -6}, (complexo){-1, 99}}};
-
-    complexo ans[100][100];
-    Produto_matricial(3, ex1, ex2, ans);
-
     printf("\n======Teste do produto matricial======\n\n");
-    print_Opmatriz(3, ex1, ex2, ans);
+    
+    int tamanho = 3;
+    bfgs_matrix ma = matrix_alloc(tamanho, tamanho);
+    matrix_change(ma, 0, 0, (complexo){1, -1});
+    matrix_change(ma, 0, 1, (complexo){2, -2}),
+    matrix_change(ma, 0, 2, (complexo){3, -3}),
+    matrix_change(ma, 1, 0, (complexo){4, -4});
+    matrix_change(ma, 1, 1, (complexo){5, -5});
+    matrix_change(ma, 1, 2, (complexo){6, -6});
+    matrix_change(ma, 2, 0, (complexo){7, -7});
+    matrix_change(ma, 2, 1, (complexo){8, -8});
+    matrix_change(ma, 2, 2, (complexo){9, -9});
+
+    bfgs_matrix mb = matrix_alloc(tamanho, tamanho);
+    matrix_change(mb, 0, 0, (complexo){-2, 2});
+    matrix_change(mb, 0, 1, (complexo){-2, -6});
+    matrix_change(mb, 0, 2, (complexo){2, -3});
+    matrix_change(mb, 1, 0, (complexo){0.4, -8});
+    matrix_change(mb, 1, 1, (complexo){0.3, -5});
+    matrix_change(mb, 1, 2, (complexo){-5, -45});
+    matrix_change(mb, 2, 0, (complexo){-15, 10});
+    matrix_change(mb, 2, 1, (complexo){45, -6});
+    matrix_change(mb, 2, 2, (complexo){-1, 99});
+
+    bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
+
+    Produto_matricial(ma, mb, ans);
+    matrix_op_print(ma, mb, ans);
+
+    matrix_free(ma);
+    matrix_free(mb);
+    matrix_free(ans);
+
 }
 
-complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][100], complexo ans[100][100])
+void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans)
 {
-
-    for (int i = 0; i < tamanho; i++)
+    double are, aim;
+    for (int i = 0; i < ma.M; i++)
     {
-        for (int j = 0; j < tamanho; j++)
+        for (int j = 0; j < ma.N; j++)
         {
-            ans[i][j].re = 0;
-            ans[i][j].im = 0;
+            matrix_change(ans, i, j, (complexo) {0, 0});
 
-            for (int j2 = 0; j2 < tamanho; j2++)
+            for (int j2 = 0; j2 < mb.M; j2++)
             {
-                ans[i][j].re += ma[i][j2].re * mb[j2][j].re + (ma[i][j2].im * mb[j2][j].im) * -1;
-                ans[i][j].im += ma[i][j2].im * mb[j2][j].re + ma[i][j2].re * mb[j2][j].im;
+                are = matrix_get(ma, i, j2).re * matrix_get(mb , j2, j).re + (matrix_get(ma, i, j2).im * matrix_get(mb, j2, j).im) * -1;
+                aim = matrix_get(ma, i, j2).im * matrix_get(mb, j2, j).re + matrix_get(ma, i, j2).re * matrix_get(mb, j2, j).im;
+                matrix_change(ans, i, j, (complexo) {matrix_get(ans,i,j).re + are, matrix_get(ans,i,j).im + aim});
+                
             }
         }
     }
-    return ans[100][100];
 }
 
 //SVD
-void Aux_teste_svd(int M, int N, complexo A[100][100]){
+void Aux_teste_svd(bfgs_matrix A){
     
     printf("Matriz operando : A = ...\n\n");
-    for (int i = 0; i < M; i++){
-        for (int j = 0; j < N; j++){
-            printf("| %.2f + ", A[i][j].re);
-            printf("%.2fj |", A[i][j].im);
-        }
-        printf("\n\n");
-    }
+    matrix_print(A);
   
-    if (M < N){
-        printf("((((((Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).))))))\n");
+    if (A.M < A.N){
+        printf("---Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).---\n");
         return;
     }
      
-    complexo V[100][100];
-    complexo S[100];
+    bfgs_matrix V = matrix_alloc(A.M, A.N);
+    bfgs_vector S = vector_alloc(A.N);
 
-    Calc_svd(M, N, A, V, S);
+    Calc_svd(A, V, S);
 
     printf("\n Matrix U = ...\n\n");
-    for (int i = 0; i < M; i++){
-        for (int j = 0; j < N; j++){
-            printf("| %.2f |", A[i][j].re);
-        }
-        printf("\n\n");
-    }
+    matrix_print(A);
 
     printf("\n Matrix V = ...\n\n");
-    for (int i = 0; i < N; i++){
-        for (int j = 0; j < N; j++){
-            printf("| %.2f |", V[i][j].re);
-        }
-        printf("\n\n");
-    }
+    matrix_print(V);
 
     printf("\n vetor S = ...\n\n");
-    for (int i = 0; i < M; i++){       
-        printf("| %.2f |", S[i].re);
-    }
-    printf("\n\n");
+    vector_print(S);
+
+    matrix_free(V);
+    vector_free(S);
 }
 
 void Teste_calc_svd(){
-    printf("\n======Teste da SVD======\n");
+    printf("\n================Teste da SVD================\n");
     srand(time(0));
-
     int MAX = 100;
+    
     printf("\n______Matriz 3 X 2______\n\n");
-    complexo A0[100][100];//Matriz 3x2
+    bfgs_matrix A0 = matrix_alloc(3,2);//Matriz 3x2
     for (int i = 0; i < 3; i ++){
         for (int j = 0; j < 2; j++){
-            A0[i][j] = (complexo){rand() % MAX, 0.0};
+            matrix_change(A0, i, j, (complexo) {rand() % MAX, 0.0});
         }
     }
-    Aux_teste_svd(3, 2, A0);
+    Aux_teste_svd(A0);
 
     printf("\n______Matriz 4 X 4______\n\n");
-    complexo A1[100][100];//Matriz 4x4
+    bfgs_matrix A1 = matrix_alloc(4, 4);//Matriz 4x4
     for (int i = 0; i < 4; i ++){
         for (int j = 0; j < 4; j++){
-            A1[i][j] = (complexo){rand() % MAX, 0.0};
+            matrix_change(A1, i, j, (complexo) {rand() % MAX, 0.0});
         }
     }
-    Aux_teste_svd(4, 4, A1);
+    Aux_teste_svd(A1);
 
     printf("\n______Matriz 6 X 5______\n\n");
-    complexo A2[100][100];//Matriz 6x5
+    bfgs_matrix A2 = matrix_alloc(6, 5);//Matriz 6x5
     for (int i = 0; i < 6; i ++){
         for (int j = 0; j < 5; j++){
-            A2[i][j] = (complexo){rand() % MAX, rand() % MAX};
+            matrix_change(A2, i, j, (complexo) {rand() % MAX, rand() % MAX});
         }
     }
-    Aux_teste_svd(6, 5, A2);
+    Aux_teste_svd(A2);
 
     printf("\n______Matriz 5 X 6______\n\n");
-    complexo A3[100][100];// Matriz 5x6
+    bfgs_matrix A3 = matrix_alloc(5, 6);// Matriz 5x6
     for (int i = 0; i < 5; i ++){
         for (int j = 0; j < 6; j++){
-            A3[i][j] = (complexo){rand() % MAX, 0.0};
+            matrix_change(A3, i, j, (complexo){rand() % MAX, 0.0});
         }
     }
-    Aux_teste_svd(5, 6, A3);
+    Aux_teste_svd(A3);
+
+    matrix_free(A0);
+    matrix_free(A1);
+    matrix_free(A2);
+    matrix_free(A3);
 /*
 */
 }
 
-void Calc_svd(int M, int N, complexo Au[100][100], complexo V[100][100], complexo S[100]){
+void Calc_svd(bfgs_matrix Au, bfgs_matrix V, bfgs_vector S){
+
+    int M = Au.M;
+    int N = Au.N;
     if (M < N){
-        printf("((((((Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).))))))\n");
+        printf("---Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).---\n");
         return;
     }
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-            if (Au[i][j].im != (double) 0){
+            if (matrix_get(Au, i, j).im != (double) 0){
                 printf("\n------So ha suporte a matrizes reais, entao somente sera calculada a SVD da parte real da matriz------\n");
                 i = M+1;
                 break;
@@ -502,26 +573,27 @@ void Calc_svd(int M, int N, complexo Au[100][100], complexo V[100][100], complex
     // transfere os valores reais da matriz complexa para a matriz da gsl.
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N; j++){
-            gsl_matrix_set(Are, i, j, Au[i][j].re);
+            gsl_matrix_set(Are, i, j, matrix_get(Au, i, j).re);
         }
     }
-
+    // Uso da GSL
     gsl_linalg_SV_decomp(Are, Vre, Sre, work);
 
+    // Retorna os valores para matriz complexa bfgs.
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N; j++){
-            Au[i][j].re = gsl_matrix_get(Are, i, j);
+            matrix_change(Au, i, j, (complexo) {gsl_matrix_get(Are, i, j), 0});
         }
     }
 
     for (int i = 0; i < N; i++){
         for (int j = 0; j < N; j++){
-            V[i][j].re = gsl_matrix_get(Vre, i, j);
+            matrix_change(V, i, j, (complexo) {gsl_matrix_get(Vre, i, j), 0});
         }
     }
 
     for (int i = 0; i < N; i++){ 
-        S[i].re = gsl_vector_get(Sre, i);
+        vector_change(S, i, (complexo) {gsl_vector_get(Sre, i), 0});
         
     }
 
