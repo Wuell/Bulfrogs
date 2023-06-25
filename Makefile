@@ -8,20 +8,20 @@ cria_pasta:
 
 	mkdir -p build
 
-teste: cria_pasta $(BUILD)/matrizes.o $(BUILD)/main.o
+teste: cria_pasta $(BUILD)/Matrizes.o $(BUILD)/Main.o
 	
 	@echo "Compilando executavel programa.exe..."
-	gcc -o $(BUILD)/aplicacao $(BUILD)/matrizes.o -lgsl $(BUILD)/main.o 
+	gcc -o $(BUILD)/aplicacao $(BUILD)/Matrizes.o -lgsl $(BUILD)/Main.o 
 
-$(BUILD)/matrizes.o: $(SRCMt)/Matrizes.c $(SRCMt)/Matrizes.h
+$(BUILD)/Matrizes.o: $(SRCMt)/Matrizes.c $(SRCMt)/Matrizes.h
 
 	@echo "Compilando a biblioteca matrizes..."
-	gcc -o $(BUILD)/matrizes.o -lgsl -c $(SRCMt)/Matrizes.c -W -Wall -pedantic
+	gcc -o $(BUILD)/Matrizes.o -lgsl -c $(SRCMt)/Matrizes.c -W -Wall -pedantic
 
-$(BUILD)/main.o: $(SRC)/main.c
+$(BUILD)/Main.o: $(SRC)/Main.c
 
-	@echo "Compilando main.c..."
-	gcc -o $(BUILD)/main.o -c $(SRC)/main.c -I$(SRCMt) -W -Wall -pedantic
+	@echo "Compilando Main.c..."
+	gcc -o $(BUILD)/Main.o -c $(SRC)/Main.c -I $(SRCMt) -W -Wall -pedantic
 
 clean:
 
