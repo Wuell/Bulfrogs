@@ -14,44 +14,124 @@ struct complexo //Define os complexos
 /// @brief Representacao usual dos numeros complexos.
 typedef struct complexo complexo;
 
-
+/**
+ * @brief 
+ * 
+ */
 typedef struct bfgs_matrix{
 
+    /// @brief 
     complexo *data;
+    /// @brief 
     int M;
+    /// @brief 
     int N;
+    /// @brief 
     int is_alloc;
 
 } bfgs_matrix;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct bfgs_vector{
 
+    /// @brief 
     complexo *data;
+    /// @brief 
     int len;
+    /// @brief 
     int is_alloc;
 
 } bfgs_vector;
 
 //--------------------------matrix handle
+
+/**
+ * @brief 
+ * 
+ * @param M 
+ * @param N 
+ * @return bfgs_matrix 
+ */
 bfgs_matrix matrix_alloc(int M, int N);
 
+/**
+ * @brief 
+ * 
+ * @param m 
+ */
 void matrix_free(bfgs_matrix m);
 
+/**
+ * @brief 
+ * 
+ * @param m 
+ * @param M 
+ * @param N 
+ * @return complexo 
+ */
 complexo matrix_get(bfgs_matrix m, int M, int N);
 
+/**
+ * @brief 
+ * 
+ * @param m 
+ * @param M 
+ * @param N 
+ * @param v 
+ */
 void matrix_change(bfgs_matrix m, int M, int N, complexo v);
 
+/**
+ * @brief 
+ * 
+ * @param ma 
+ */
 void matrix_print(bfgs_matrix ma);
 
 //--------------------------vector handle
+/**
+ * @brief Cria uma matriz do tipo bgfs, inicia a array de dados do bfgs_vector.data alocando o tamanho desejado na memoria,
+ * retornando o vetor alocado, passando o pointer para o vetor bfgs originador.
+ * @remark Deve ser usado da seguinte forma: bfgs_vector nome_do_vetor = vector_alloc(tamanho desejado);.
+ * 
+ * @param len Tamanho do vetor 
+ * @return bfgs_vector vetor com pointer ja alocado no tamanho desejado.
+ */
 bfgs_vector vector_alloc(int len);
 
+/**
+ * @brief Libera da memoria o vetor V dado como argumento, previamente alocado.
+ * 
+ * @param v Vetor para ser liberado da memoria.
+ */
 void vector_free(bfgs_vector v);
 
+/**
+ * @brief Retorna o numero complexo localizado na posicao V[m] do vetor.
+ * 
+ * @param v Vetor o qual ira ser retirado.
+ * @param M posicao desejada.
+ * @return complexo Numero complexo ocupante da posicao.
+ */
 complexo vector_get(bfgs_vector v, int M);
 
+/**
+ * @brief 
+ * 
+ * @param v 
+ * @param M 
+ * @param a 
+ */
 void vector_change(bfgs_vector v, int M, complexo a);
 
+/**
+ * @brief 
+ * 
+ * @param v 
+ */
 void vector_print(bfgs_vector v);
 
 
@@ -59,17 +139,15 @@ void vector_print(bfgs_vector v);
 
 //-------------------------PRINTERS
 
-/// @brief Imprime a modificacao das matrizes A e B e o resultado MOD de alguma operacao.
-/// @param tamanho das matrizes
-/// @param A matriz A
-/// @param B matriz B
-/// @param MOD (matrizes A e B ja operadas)
-void matrix_op_print(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans); //Função de printar para operação de duas matrizes
+/// @brief Imprime a modificacao das matrizes A e B e o resultado de alguma operacao, de forma padrao.
+/// @param ma matriz A
+/// @param Ma matriz B
+/// @param ans (matrizes A e B ja operadas)
+void matrix_op_print(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
 
-/// @brief Imprime a matriz A e o resultado MOD de alguma modificacao.
-/// @param Tamanho da matriz
-/// @param A matriz A
-/// @param MOD (matriz A ja operada)
+/// @brief Imprime a matriz A e o resultado MOD de alguma modificacao, de forma padrao.
+/// @param[in] m matriz antes da modificacao
+/// @param[in] ans matriz m apos operacao
 void matrix_mod_print(bfgs_matrix m, bfgs_matrix ans);
 
 

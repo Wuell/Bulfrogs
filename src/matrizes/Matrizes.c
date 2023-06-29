@@ -13,11 +13,17 @@ bfgs_matrix matrix_alloc(int M, int N){
     bfgs_matrix data = {.data = (complexo *)malloc(M * N  * sizeof(complexo))};
     data.M = M;
     data.N = N;
+    data.is_alloc = 1;
 
     return data;
 }
 
 void matrix_free(bfgs_matrix m){
+
+    if(m.is_alloc != 1){
+        printf("\nERROR//A matriz não foi alocada\n");
+        exit(1);
+    }
 
     free(m.data);
 
@@ -47,6 +53,7 @@ void matrix_print(bfgs_matrix ma){
     }
 }
 
+
 //vector handle
 bfgs_vector vector_alloc(int len){
     
@@ -74,7 +81,7 @@ void vector_change(bfgs_vector v, int M, complexo a){
 void vector_print(bfgs_vector v){
 
     for (int i = 0; i < v.len; i++){
-        printf("| %.2f + %.2f |", v.data[i].re, v.data[i].im);
+        printf("| %.2f %.2f |", v.data[i].re, v.data[i].im);
 
     }
     printf("\n");
@@ -93,7 +100,7 @@ void matrix_op_print(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans) // Funçã
     printf("Operando: B=...\n\n");
     matrix_print(mb);
 
-    printf("\n\nOperando: R=...\n\n");
+    printf("Operando: R=...\n\n");
     matrix_print(ans);
     
 }
@@ -123,7 +130,7 @@ void Transposta(bfgs_matrix m, bfgs_matrix mt)
 
 void teste_transposta()
 {
-    printf("\n\n======Teste da operacao Transposta======");
+    printf("======Teste da operacao Transposta======");
     
     int tamanho = 3;
 
@@ -163,7 +170,7 @@ void Conjugada(bfgs_matrix m, bfgs_matrix mc)
 
 void teste_conjugada()
 {
-    printf("\n\n======Teste da operacao Conjugada======");
+    printf("======Teste da operacao Conjugada======");
 
     int tamanho = 3;
     
@@ -200,7 +207,7 @@ void Hermitiana(bfgs_matrix m, bfgs_matrix h)
 
 void teste_hermitiana()
 {
-    printf("\n\n======Teste da operacao Hermitiana======");
+    printf("======Teste da operacao Hermitiana======");
     
     int tamanho = 3;
 
@@ -229,6 +236,14 @@ void teste_hermitiana()
 
 void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
 {
+    if (ma.M != mb.M || ma.N != mb.N){
+
+        printf("\n---ERROR---Matrizes de tamanhos incompativeis");
+        printf("\n---Program interrupted.");
+        exit(EXIT_SUCCESS);
+
+    }
+
     for (int i = 0; i < ma.M; i++)
         for (int j = 0; j < ma.N; j++)
         {
@@ -238,7 +253,7 @@ void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
 
 void teste_soma()
 {
-    printf("\n\n======Teste da operacao Soma======");
+    printf("======Teste da operacao Soma======");
     
     int tamanho = 3;
     bfgs_matrix ma = matrix_alloc(tamanho, tamanho);
@@ -277,6 +292,14 @@ void teste_soma()
 
 void Subtracao(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
 {
+        if (ma.M != mb.M || ma.N != mb.N){
+
+        printf("\n---ERROR---Matrizes de tamanhos incompativeis");
+        printf("\n---Program interrupted.");
+        exit(EXIT_SUCCESS);
+
+    }
+
     for (int i = 0; i < ma.M; i++)
         for (int j = 0; j < ma.N; j++)
         {
@@ -340,9 +363,9 @@ void teste_produto_escalar()
 
     complexo ans = Produto_escalar(va, vb);
 
-    printf("\n\n======Teste da Produto Escalar======\n");
+    printf("======Teste da Produto Escalar======");
 
-    printf("Operando: A=...\n\n");
+    printf("\n\nOperando: A=...\n\n");
     vector_print(va);
 
     printf("\n\n");
@@ -413,7 +436,7 @@ void teste_produto_complexo()
 // PRODUTO MATRICIAL
 void teste_produto_matricial()
 {
-    printf("\n======Teste do produto matricial======\n\n");
+    printf("======Teste do produto matricial======");
     
     int tamanho = 3;
     bfgs_matrix ma = matrix_alloc(tamanho, tamanho);
@@ -450,7 +473,16 @@ void teste_produto_matricial()
 }
 
 void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans)
-{
+{   
+    //vericando se ma pode fazer a operacao com mb
+    if (ma.N != mb.M){
+
+        printf("\n---ERROR---Matrizes de tamanhos incompativeis, ma[N] != mb[M]");
+        printf("\n---Program interrupted.");
+        exit(EXIT_SUCCESS);
+
+    }
+
     double are, aim;
     for (int i = 0; i < ma.M; i++)
     {
@@ -474,11 +506,6 @@ void Aux_teste_svd(bfgs_matrix A){
     
     printf("Matriz operando : A = ...\n\n");
     matrix_print(A);
-  
-    if (A.M < A.N){
-        printf("---Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).---\n");
-        return;
-    }
      
     bfgs_matrix V = matrix_alloc(A.M, A.N);
     bfgs_vector S = vector_alloc(A.N);
@@ -499,7 +526,7 @@ void Aux_teste_svd(bfgs_matrix A){
 }
 
 void Teste_calc_svd(){
-    printf("\n================Teste da SVD================\n");
+    printf("================Teste da SVD================\n");
     srand(time(0));
     int MAX = 100;
     
@@ -551,10 +578,13 @@ void Calc_svd(bfgs_matrix Au, bfgs_matrix V, bfgs_vector S){
 
     int M = Au.M;
     int N = Au.N;
+    // Verificando se a gsl pode fazer a svd.
     if (M < N){
-        printf("---Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).---\n");
-        return;
+        printf("---ERRROR---Nao e possivel realizar a operação com M (numero de linhas) sendo menor que N (numeros de colunas).---\n");
+        printf("---Program interrupted.\n");
+        exit(1);
     }
+
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
             if (matrix_get(Au, i, j).im != (double) 0){
