@@ -14,22 +14,141 @@ struct complexo //Define os complexos
 /// @brief Representacao usual dos numeros complexos.
 typedef struct complexo complexo;
 
+/**
+ * @brief 
+ * 
+ */
+typedef struct bfgs_matrix{
+
+    /// @brief 
+    complexo *data;
+    /// @brief 
+    int M;
+    /// @brief 
+    int N;
+    /// @brief 
+    int is_alloc;
+
+} bfgs_matrix;
+
+/**
+ * @brief 
+ * 
+ */
+typedef struct bfgs_vector{
+
+    /// @brief 
+    complexo *data;
+    /// @brief 
+    int len;
+    /// @brief 
+    int is_alloc;
+
+} bfgs_vector;
+
+//--------------------------matrix handle
+
+/**
+ * @brief 
+ * 
+ * @param M 
+ * @param N 
+ * @return bfgs_matrix 
+ */
+bfgs_matrix matrix_alloc(int M, int N);
+
+/**
+ * @brief 
+ * 
+ * @param m 
+ */
+void matrix_free(bfgs_matrix m);
+
+/**
+ * @brief 
+ * 
+ * @param m 
+ * @param M 
+ * @param N 
+ * @return complexo 
+ */
+complexo matrix_get(bfgs_matrix m, int M, int N);
+
+/**
+ * @brief 
+ * 
+ * @param m 
+ * @param M 
+ * @param N 
+ * @param v 
+ */
+void matrix_change(bfgs_matrix m, int M, int N, complexo v);
+
+/**
+ * @brief 
+ * 
+ * @param ma 
+ */
+void matrix_print(bfgs_matrix ma);
+
+//--------------------------vector handle
+/**
+ * @brief Cria uma matriz do tipo bgfs, inicia a array de dados do bfgs_vector.data alocando o tamanho desejado na memoria,
+ * retornando o vetor alocado, passando o pointer para o vetor bfgs originador.
+ * @remark Deve ser usado da seguinte forma: bfgs_vector nome_do_vetor = vector_alloc(tamanho desejado);.
+ * 
+ * @param len Tamanho do vetor 
+ * @return bfgs_vector vetor com pointer ja alocado no tamanho desejado.
+ */
+bfgs_vector vector_alloc(int len);
+
+/**
+ * @brief Libera da memoria o vetor V dado como argumento, previamente alocado.
+ * 
+ * @param v Vetor para ser liberado da memoria.
+ */
+void vector_free(bfgs_vector v);
+
+/**
+ * @brief Retorna o numero complexo localizado na posicao V[m] do vetor.
+ * 
+ * @param v Vetor o qual ira ser retirado.
+ * @param M posicao desejada.
+ * @return complexo Numero complexo ocupante da posicao.
+ */
+complexo vector_get(bfgs_vector v, int M);
+
+/**
+ * @brief 
+ * 
+ * @param v 
+ * @param M 
+ * @param a 
+ */
+void vector_change(bfgs_vector v, int M, complexo a);
+
+/**
+ * @brief 
+ * 
+ * @param v 
+ */
+void vector_print(bfgs_vector v);
+
+
 //-------------------------Miscellaneous
 
 //-------------------------PRINTERS
 
-/// @brief Imprime a modificacao das matrizes A e B e o resultado MOD de alguma operacao.
-/// @param tamanho das matrizes
-/// @param A matriz A
-/// @param B matriz B
-/// @param MOD (matrizes A e B ja operadas)
-void print_Opmatriz(int tamanho, complexo matrizB[100][100], complexo matrizA[100][100], complexo matrizR[100][100]); //Função de printar para operação de duas matrizes
+/// @brief Imprime a modificacao das matrizes A e B e o resultado de alguma operacao, de forma padrao.
+/// @param ma matriz A
+/// @param Ma matriz B
+/// @param ans (matrizes A e B ja operadas)
+void matrix_op_print(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
 
-/// @brief Imprime a matriz A e o resultado MOD de alguma modificacao.
-/// @param Tamanho da matriz
-/// @param A matriz A
-/// @param MOD (matriz A ja operada)
-void print_matriz(int tamanho, complexo matriz[100][100], complexo matriz_mod[100][100]);
+/// @brief Imprime a matriz A e o resultado MOD de alguma modificacao, de forma padrao.
+/// @param[in] m matriz antes da modificacao
+/// @param[in] ans matriz m apos operacao
+void matrix_mod_print(bfgs_matrix m, bfgs_matrix ans);
 
 
 //-------------------------TRANSPOSTA
@@ -46,7 +165,7 @@ void teste_transposta();
 * @param[out] Transposta de A
 */
 
-complexo Transposta (int tamanho, complexo matriz[100][100], complexo matrizT[100][100]);
+void Transposta(bfgs_matrix ma, bfgs_matrix ans);
 
 
 
@@ -64,7 +183,7 @@ void teste_conjugada();
 * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado
 * @param[out] Conjugada de A
 */
-complexo Conjugada(int tamanho, complexo matriz[100][100], complexo matrizConj[100][100]);
+void Conjugada(bfgs_matrix m, bfgs_matrix mc);
 
 
 
@@ -82,9 +201,8 @@ void teste_hermitiana();
 * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
 * @param[out] Hermitiana de A
 */
-complexo Hermitiana(int tamanho, complexo matriz[100][100],complexo matrizHermt[100][100]);
+void Hermitiana(bfgs_matrix m, bfgs_matrix h);
 
-#endif
 
 
 
@@ -103,7 +221,7 @@ void teste_soma();
 * @param[in] Resultado matriz pre alocada na memoria para receber o resultado.
 * @param[out] A somada de B
 */
-complexo Soma(int tamanho, complexo MatrizA[100][100], complexo MatrizB[100][100], complexo MatrizR[100][100]);
+void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
 
 
 
@@ -122,7 +240,7 @@ void teste_subtracao();
 * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
 * @param[out] Subtracao de B em A
 */
-complexo Subtracao(int tamanho, complexo matrizA[100][100], complexo matrizB[100][100], complexo matrizR[100][100]);
+void Subtracao(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
 
 
 
@@ -142,7 +260,7 @@ void teste_produto_escalar();
 * @param[out] Produto entre A e B
 */
 
-complexo Produto_escalar(int tamanho,complexo ma[100], complexo mb[100]);
+complexo Produto_escalar(bfgs_vector va, bfgs_vector vb);
 
 
 
@@ -151,7 +269,7 @@ complexo Produto_escalar(int tamanho,complexo ma[100], complexo mb[100]);
 //-------------------------PRODUTO MATRICIAL
 
 ///Testa a funcao de produto matricial.
-void teste_produto_matricial();
+void Teste_produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans);
 
 /**
 * Calcula o produto entre as matrizes A e B e armazena o resultado na matriz disponibilizada Resultado.
@@ -162,7 +280,7 @@ void teste_produto_matricial();
 * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
 * @param[out] Produto entre A e B
 */
-complexo Produto_matricial(int tamanho, complexo ma[100][100], complexo mb[100][100], complexo ans[100][100]);
+void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans);
 
 
 
@@ -202,10 +320,10 @@ void Teste_calc_svd();
  * @param A Matriz A.
  */
 
-void Aux_teste_svd(int M, int N, complexo A[100][100]);
+void Aux_teste_svd(bfgs_matrix A);
 
 /**
- * Calcula a decomposicao do valor singular (SVD) da matriz dada A[M][N]. Que em sintese e transformar uma matrix A em 3 outras, de 
+ * Calcula a decomposicao do valor singular (SVD) da matriz dada A[M][N]. Que em sintese e transformar uma matriz A em 3 outras, de 
  * acordo com a formula A = U V S de acordo com o algoritmo de  Golub Reinsch.
  * @remark Nao ha suporte a matrizes com parte imaginaria, apenas reais.
  * @remark Sendo que necessariamente M >= N.
@@ -217,13 +335,12 @@ void Aux_teste_svd(int M, int N, complexo A[100][100]);
  * @param[out] S Vetor S em que vai ser guardado o valor da diagonal da matriz S.
  * @return matrizes U, V e S preenchidas com os valores correspondentes a operacao.
  */
-void Calc_svd(int M, int N, complexo Au[100][100], complexo V[100][100], complexo S[100]);
-
-
-
+void Calc_svd(bfgs_matrix Au, bfgs_matrix V, bfgs_vector S);
 
 
 //-------------------------TESTE GERAL
 
 ///Integra todos os testes das funcoes para serem executados de uma so vez.
 void Teste_geral();
+
+#endif
