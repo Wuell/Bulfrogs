@@ -36,3 +36,20 @@ void rx_qam_demapper(bfgs_vector complex_vector)
         printf("%d\n",int_vector[j]);
 }
  
+void verify_nstreams(int Nt,int Nr, int Nstreams)
+{
+
+    int aux;
+
+    aux = Nt;
+
+    if(Nr <= Nt)
+        aux = Nr;
+
+    if(aux < Nstreams){
+        printf("O Numero de stream nao pode ser maior que o valor minimo entre Nt e Nr. Altere o valor de Nstreams.\n");
+        exit(0);
+    }
+
+}
+
