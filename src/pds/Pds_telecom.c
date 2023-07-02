@@ -53,3 +53,36 @@ void verify_nstreams(int Nt,int Nr, int Nstreams)
 
 }
 
+void tx_layer_mapper(bfgs_vector Vector_QAM,int Nstreams,int NTransmissions)
+{
+
+    bfgs_matrix Matrix_QAM = matrix_alloc(Nstreams,NTransmissions);
+    int index = 0;
+
+        for(int i = 0; i < Nstreams ; i++){
+            for(int j = 0; j < NTransmissions; j++)
+            {
+
+                matrix_change(Matrix_QAM,i,j,Vector_QAM.data[index]);
+                index++;
+            }            
+        }
+
+    matrix_print(Matrix_QAM);
+    matrix_free(Matrix_QAM);
+} 
+
+bfgs_vector random_vector_com(int len,int intervalMod){
+
+    bfgs_vector vector;
+    srand(time(0));
+    int range = intervalMod*2 + 1;
+
+    vector = vector_alloc(len);
+
+    for(int i = 0; i < len; i++){
+        vector_change(vector,i,(complexo){rand() % (range - intervalMod),rand() % range - intervalMod});
+
+    }
+    return vector;
+}

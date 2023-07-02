@@ -7,15 +7,26 @@
 
 int main()
 {
+    
+
     int Nt, Nr, Ntstreams;
 
     Nt = 3;
     Nr = 10;
-    Ntstreams = 10;
+    Ntstreams = 3;
 
     verify_nstreams(Nt,Nr,Ntstreams);
 
-    printf("Nestor dá o rabo\n");
+    bfgs_vector cachorro;
+
+    cachorro = random_vector_com(20,10);
+
+    vector_print(cachorro);
+
+    tx_layer_mapper(cachorro,2,20);
+
+    vector_free(cachorro);
+    
   //=========================================================================================================================   
 
     /*double *random_num = malloc(sizeof(double)*10);
