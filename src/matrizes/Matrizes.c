@@ -45,9 +45,12 @@ void matrix_change(bfgs_matrix m, int M, int N, complexo v){
 
 void matrix_print(bfgs_matrix ma){
 
+    int index = 1;
+
     for (int i = 0; i < ma.M; i++){
         for (int j = 0; j < ma.N; j++){
-            printf("| %.2f + %.2f |", matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
+            printf("%d.| %.2f %.2fj |\n", index ,matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
+            index++;
         }
         printf("\n\n");
     }
@@ -80,9 +83,11 @@ void vector_change(bfgs_vector v, int M, complexo a){
 
 void vector_print(bfgs_vector v){
 
-    for (int i = 0; i < v.len; i++){
-        printf("| %.2f %.2f |", v.data[i].re, v.data[i].im);
+    int index = 1;
 
+    for (int i = 0; i < v.len ; i++){
+        printf("%d.| %.2f %.2fj|\n",index,v.data[i].re, v.data[i].im);
+        index++;
     }
     printf("\n");
 

@@ -21,7 +21,7 @@ $(BUILD)/Matrizes.o: $(SRCMt)/Matrizes.c $(SRCMt)/Matrizes.h
 
 $(BUILD)/Pds_telecom.o: $(SRCPds)/Pds_telecom.c $(SRCPds)/Pds_telecom.h
 
-	@echo "Compilando a biblioteca Pds telecom..."
+	@echo "Compilando a biblioteca PDS"
 	gcc -o $(BUILD)/Pds_telecom.o -lgsl -c $(SRCPds)/Pds_telecom.c -W -Wall -pedantic
 
 $(BUILD)/Main.o: $(SRC)/Main.c
