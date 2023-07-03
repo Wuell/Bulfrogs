@@ -5,28 +5,62 @@
 #include <stdlib.h>
 ///@file Main.c
 
+#define number_bits 20
 int main()
 {
-    
 
     int Nt, Nr, Ntstreams;
 
     Nt = 3;
     Nr = 10;
     Ntstreams = 3;
+    int trans = 100;
+    int indexj,index = 1;
+
+    bfgs_vector teste = vector_alloc(number_bits);
+
+    int *bits = malloc(sizeof(int)*number_bits);
+
+    bits = random_vector_int(number_bits,4);
+
+    int *teste_reverso = malloc(sizeof(int)*number_bits);
+
+    for(int i = 0; i < number_bits; i++){
+        printf("%d.|%d|\n",index, bits[i]);
+        index++;
+
+    }
+
+printf("========== QAM_MAPPER =========\n");
+
+    teste = tx_qam_mapper(bits,number_bits);
+
+    vector_print(teste);
+
+
+printf("========== LAYER_MAPPER =========\n");
 
     verify_nstreams(Nt,Nr,Ntstreams);
 
-    bfgs_vector cachorro;
+    tx_layer_mapper(teste,Ntstreams,trans);
+/*    printf("========== QAM_DEMAPPER =========\n");
 
-    cachorro = random_vector_com(20,10);
+    teste_reverso = rx_qam_demapper(teste,number_bits);
 
-    vector_print(cachorro);
+    for(int j = 0; j < number_bits; j++){
+        printf("%d.|%d|\n",indexj, teste_reverso[j]);
+        indexj++;
 
-    tx_layer_mapper(cachorro,2,20);
+    }*/
 
-    vector_free(cachorro);
-    
+    vector_free(teste);
+
+    free(bits);
+
+    free(teste_reverso);
+
+    return(0);
+}
   //=========================================================================================================================   
 
     /*double *random_num = malloc(sizeof(double)*10);
@@ -58,6 +92,6 @@ int main()
     printf("so pra ver se ta funfando\n\n");
 
     Teste_geral();
-    */
+    
     return (0);
-}
+    */

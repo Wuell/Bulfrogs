@@ -21,7 +21,7 @@ bfgs_vector tx_qam_mapper(int *bits,int number_bits)
         else if (bits[i] == 2)
             vector_change(complex_vector, i ,(complexo){1,1});
 
-        else//bits[i] == 3)
+        else
             vector_change(complex_vector, i ,(complexo){1,-1});
 
     }
@@ -29,11 +29,11 @@ bfgs_vector tx_qam_mapper(int *bits,int number_bits)
 }
 
 
-void rx_qam_demapper(bfgs_vector complex_vector)
+int* rx_qam_demapper(bfgs_vector complex_vector,int number_int)
 {
     int *int_vector = malloc(sizeof(int)*4);
 
-    for (int i = 0;i < 4; i++)
+    for (int i = 0;i < number_int; i++)
     {
         if(vector_get(complex_vector,i).re != 0 && vector_get(complex_vector,i).im != 0)
         {
@@ -41,14 +41,14 @@ void rx_qam_demapper(bfgs_vector complex_vector)
             if(vector_get(complex_vector,i).re == -1 && vector_get(complex_vector,i).im == 1)
                 int_vector[i] = 0;
 
-                else if(vector_get(complex_vector,i).re == -1 && vector_get(complex_vector,i).im == -1)
-                    int_vector[i] = 1;
+            else if(vector_get(complex_vector,i).re == -1 && vector_get(complex_vector,i).im == -1)
+                int_vector[i] = 1;
 
-                    else if(vector_get(complex_vector,i).re == 1 && vector_get(complex_vector,i).im == 1)
-                        int_vector[i] = 2;
+            else if(vector_get(complex_vector,i).re == 1 && vector_get(complex_vector,i).im == 1)
+                int_vector[i] = 2;
 
-                        else if (vector_get(complex_vector,i).re == 1 && vector_get(complex_vector,i).im == -1)
-                            int_vector[i] = 3;
+            else if (vector_get(complex_vector,i).re == 1 && vector_get(complex_vector,i).im == -1)
+                int_vector[i] = 3;
         }
         else
         {
@@ -57,8 +57,8 @@ void rx_qam_demapper(bfgs_vector complex_vector)
         }
     }
 
-    for (int j = 0;j < 4; j++)
-        printf("%d\n",int_vector[j]);
+    return int_vector;
+
 }
  
 void verify_nstreams(int Nt,int Nr, int Nstreams)
@@ -80,6 +80,8 @@ void verify_nstreams(int Nt,int Nr, int Nstreams)
 
 void tx_layer_mapper(bfgs_vector Vector_QAM,int Nstreams,int NTransmissions)
 {
+
+    
 
     bfgs_matrix Matrix_QAM = matrix_alloc(Nstreams,NTransmissions);
     int index = 0;
@@ -110,4 +112,17 @@ bfgs_vector random_vector_com(int len,int intervalMod){
 
     }
     return vector;
+}
+
+int* random_vector_int(int len,int number_bits)
+{
+
+    int *vector = malloc(sizeof(int)*len);
+    srand(time(0));
+    
+    for(int i = 0; i < len; i++)
+        vector[i] = rand() % number_bits;
+    
+    return vector;
+
 }
