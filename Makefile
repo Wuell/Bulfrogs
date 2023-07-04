@@ -1,6 +1,7 @@
 BUILD = ./build
 SRC = ./src
 SRCMt = ./src/matrizes
+SRCPds = ./src/pds
 
 aplicacao: teste doc
 
@@ -8,20 +9,27 @@ cria_pasta:
 
 	mkdir -p build
 
-teste: cria_pasta $(BUILD)/matrizes.o $(BUILD)/main.o
+teste: cria_pasta $(BUILD)/Matrizes.o $(BUILD)/Main.o $(BUILD)/Pds_telecom.o
 	
 	@echo "Compilando executavel programa.exe..."
-	gcc -o $(BUILD)/aplicacao $(BUILD)/matrizes.o -lgsl $(BUILD)/main.o 
+	gcc -o $(BUILD)/aplicacao $(BUILD)/Matrizes.o $(BUILD)/Pds_telecom.o -lgsl $(BUILD)/Main.o 
 
-$(BUILD)/matrizes.o: $(SRCMt)/Matrizes.c $(SRCMt)/Matrizes.h
+$(BUILD)/Matrizes.o: $(SRCMt)/Matrizes.c $(SRCMt)/Matrizes.h
 
 	@echo "Compilando a biblioteca matrizes..."
-	gcc -o $(BUILD)/matrizes.o -lgsl -c $(SRCMt)/Matrizes.c -W -Wall -pedantic
+	gcc -o $(BUILD)/Matrizes.o -lgsl -c $(SRCMt)/Matrizes.c -W -Wall -pedantic
 
-$(BUILD)/main.o: $(SRC)/main.c
+$(BUILD)/Pds_telecom.o: $(SRCPds)/Pds_telecom.c $(SRCPds)/Pds_telecom.h
 
-	@echo "Compilando main.c..."
-	gcc -o $(BUILD)/main.o -c $(SRC)/main.c -I$(SRCMt) -W -Wall -pedantic
+	@echo "Compilando a biblioteca PDS"
+	gcc -o $(BUILD)/Pds_telecom.o -lgsl -c $(SRCPds)/Pds_telecom.c -W -Wall -pedantic
+
+$(BUILD)/Main.o: $(SRC)/Main.c
+
+	@echo "Compilando Main.c..."
+	gcc -o $(BUILD)/Main.o -c $(SRC)/Main.c -I $(SRCMt) -I $(SRCPds) -W -Wall -pedantic
+
+
 
 clean:
 

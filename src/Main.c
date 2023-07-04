@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "Matrizes.h"
+#include <time.h>
+#include "Pds_telecom.h"
 ///@file Main.c
 
 int main()
