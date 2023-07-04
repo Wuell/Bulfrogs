@@ -20,13 +20,13 @@ typedef struct complexo complexo;
  */
 typedef struct bfgs_matrix{
 
-    /// @brief 
+    /// @brief Ponteiro de uma dimensao e que serao guardados os dados e sera usada como uma matriz.
     complexo *data;
-    /// @brief 
+    /// @brief Numero de linhas da matriz.
     int M;
-    /// @brief 
+    /// @brief Numero de colunas da matriz.
     int N;
-    /// @brief 
+    /// @brief Registrador de alocacao
     int is_alloc;
 
 } bfgs_matrix;
@@ -45,7 +45,18 @@ typedef struct bfgs_vector{
     int is_alloc;
 
 } bfgs_vector;
+/**
+ * @brief 
+ * 
+ */
+typedef struct bfgs_int_vector{
 
+    /// @brief 
+    int* data; 
+    /// @brief
+    int  len;
+
+} bfgs_int_vector;
 //--------------------------matrix handle
 
 /**
@@ -91,9 +102,9 @@ void matrix_change(bfgs_matrix m, int M, int N, complexo v);
  */
 void matrix_print(bfgs_matrix ma);
 
-//--------------------------vector handle
+//---------------------------------------------------------------------------------------------------------------vector handle
 /**
- * @brief Cria uma matriz do tipo bgfs, inicia a array de dados do bfgs_vector.data alocando o tamanho desejado na memoria,
+ * @brief Cria uma vetor do tipo bgfs, inicia a array de dados do bfgs_vector.data alocando o tamanho desejado na memoria,
  * retornando o vetor alocado, passando o pointer para o vetor bfgs originador.
  * @remark Deve ser usado da seguinte forma: bfgs_vector nome_do_vetor = vector_alloc(tamanho desejado);.
  * 
@@ -135,9 +146,11 @@ void vector_change(bfgs_vector v, int M, complexo a);
 void vector_print(bfgs_vector v);
 
 
-//-------------------------Miscellaneous
+//-------------------------------------------------------------------------Miscellaneous
+bfgs_int_vector int_vector_alloc(int len);
 
-//-------------------------PRINTERS
+char* char_vector_alloc(int len);
+//-------------------------------------------------------------------------PRINTERS
 
 /// @brief Imprime a modificacao das matrizes A e B e o resultado de alguma operacao, de forma padrao.
 /// @param ma matriz A
