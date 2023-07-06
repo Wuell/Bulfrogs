@@ -75,15 +75,15 @@ void verify_nstreams(int Nr, int Nt, int Nstreams)
     }
 }
 
-bfgs_matrix tx_layer_mapper(bfgs_vector Vector_QAM, int Nstreams, int NTransmissions)
+bfgs_matrix tx_layer_mapper(bfgs_vector Vector_QAM, int Nt, int Nstreams)
 {
 
-    bfgs_matrix Matrix_Layer = matrix_alloc(Nstreams, NTransmissions);
+    bfgs_matrix Matrix_Layer = matrix_alloc(Nt, Nstreams);
     int index = 0;
 
-    for (int i = 0; i < Nstreams; i++)
+    for (int i = 0; i < Nt; i++)
     {
-        for (int j = 0; j < NTransmissions; j++)
+        for (int j = 0; j < Nstreams; j++)
         {
 
             matrix_change(Matrix_Layer, i, j, Vector_QAM.data[index]);
@@ -125,15 +125,50 @@ int *random_vector_int(int len, int number_bits)
 bfgs_matrix channel_gen(int Nr, int Nt)
 {
 
-    bfgs_matrix channel = matrix_alloc(Nr,Nt);
+    bfgs_matrix channel = matrix_alloc(Nr, Nt);
 
     srand(time(0));
-     
-    for (int i = 0; i < Nt; i++) {
-        for (int j = 0; j < Nr; j++) {
-            channel.data[i]=(complexo){0,0};
+
+    for (int i = 0; i < Nr; i++)
+    {
+        for (int j = 0; j < Nt; j++)
+        {
+            matrix_change(channel, i, j, (complexo){(((double)rand() / RAND_MAX) * 2 - 1), 0});
         }
     }
-    
+
     return channel;
+}
+
+bfgs_matrix noise(int Nr, int Nt, double intervalR)
+{
+    bfgs_matrix noise = matrix_alloc(Nr, Nt);
+
+    for (int i = 0; i < Nr; i++)
+    {
+        for (int j = 0; j < Nt; j++)
+        {
+
+            matrix_change(noise, i, j, (complexo){((double)rand() / RAND_MAX) * (2 * intervalR) - intervalR, 0});
+        }
+    }
+    return noise;
+}
+
+bfgs_matrix channel_transmission(bfgs_matrix symbols, bfgs_matrix channel, double intervalR)
+{
+    bfgs_matrix ruido = noise(channel.M,symbols.N,intervalR);
+
+    bfgs_matrix prod_aux = matrix_alloc(channel.M, symbols.N);
+
+    prod_aux = Produto_matricial(channel, symbols);
+
+    bfgs_matrix channel_trans = matrix_alloc(channel.M, symbols.N);
+
+    channel_trans = Soma(ruido,prod_aux);
+
+    matrix_free(prod_aux);
+    matrix_free(ruido);
+
+    return channel_trans;
 }

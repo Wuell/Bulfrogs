@@ -211,7 +211,7 @@ void teste_soma();
  * @param[in] Resultado matriz pre alocada na memoria para receber o resultado.
  * @param[out] A somada de B
  */
-void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
+bfgs_matrix Soma(bfgs_matrix ma, bfgs_matrix mb);
 
 //-------------------------SUBTRAÇÃO
 
@@ -249,7 +249,7 @@ complexo Produto_escalar(bfgs_vector va, bfgs_vector vb);
 //-------------------------PRODUTO MATRICIAL
 
 /// Testa a funcao de produto matricial.
-void Teste_produto_matricial(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
+void teste_produto_matricial();
 
 /**
  * Calcula o produto entre as matrizes A e B e armazena o resultado na matriz disponibilizada Resultado.
@@ -260,7 +260,7 @@ void Teste_produto_matricial(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
  * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
  * @param[out] Produto entre A e B
  */
-void Produto_matricial(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
+bfgs_matrix Produto_matricial(bfgs_matrix ma, bfgs_matrix mb);
 
 //-------------------------PRODUTO COMPLEXO
 

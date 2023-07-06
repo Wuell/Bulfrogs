@@ -15,4 +15,8 @@ int *random_vector_int(int len, int number_bits);
 
 bfgs_matrix channel_gen(int Nr, int Nt);
 
+bfgs_matrix noise(int Nr,int Nt, double intervalR);
+
+bfgs_matrix channel_transmission(bfgs_matrix symbols, bfgs_matrix channel, double intervalR);
+
 #endif

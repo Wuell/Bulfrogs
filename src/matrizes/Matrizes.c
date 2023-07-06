@@ -241,7 +241,7 @@ void teste_hermitiana()
 
 /// SOMA
 
-void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
+bfgs_matrix Soma(bfgs_matrix ma, bfgs_matrix mb)
 {
     if (ma.M != mb.M || ma.N != mb.N)
     {
@@ -251,18 +251,23 @@ void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
         exit(EXIT_SUCCESS);
     }
 
+    bfgs_matrix ans = matrix_alloc(ma.M, ma.N);
+
     for (int i = 0; i < ma.M; i++)
         for (int j = 0; j < ma.N; j++)
         {
-            matrix_change(ans, i, j, (complexo){matrix_get(ma, i, j).re + matrix_get(mb, i, j).re, matrix_get(ma, i, j).im + matrix_get(mb, i, j).im});
+            matrix_change(ans, i, j, (complexo){matrix_get(ma,i,j).re + matrix_get(mb,i,j).re, matrix_get(ma,i,j).im + matrix_get(mb,i,j).im});
         }
+    return ans;
 }
 
 void teste_soma()
 {
-    printf("======Teste da operacao Soma======");
+    printf("======Teste da operacao Soma======\n\n");
 
     int tamanho = 3;
+
+    bfgs_matrix ans;
     bfgs_matrix ma = matrix_alloc(tamanho, tamanho);
     ma.data[0] = (complexo){2, 7};
     ma.data[1] = (complexo){1, -5};
@@ -285,10 +290,12 @@ void teste_soma()
     mb.data[7] = (complexo){45, -6};
     mb.data[8] = (complexo){-1, 99};
 
-    bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
+    
 
-    Soma(ma, mb, ans);
-    matrix_op_print(ma, mb, ans);
+    ans = Soma(ma, mb);
+    // matrix_op_print(ma, mb, ans);
+
+    matrix_print(ans);
 
     matrix_free(ma);
     matrix_free(mb);
@@ -465,7 +472,7 @@ void teste_produto_matricial()
 
     bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
 
-    Produto_matricial(ma, mb, ans);
+    ans = Produto_matricial(ma, mb);
     matrix_op_print(ma, mb, ans);
 
     matrix_free(ma);
@@ -473,7 +480,7 @@ void teste_produto_matricial()
     matrix_free(ans);
 }
 
-void Produto_matricial(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
+bfgs_matrix Produto_matricial(bfgs_matrix ma, bfgs_matrix mb)
 {
     // vericando se ma pode fazer a operacao com mb
     if (ma.N != mb.M)
@@ -483,6 +490,8 @@ void Produto_matricial(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
         printf("\n---Program interrupted.");
         exit(EXIT_SUCCESS);
     }
+
+    bfgs_matrix ans = matrix_alloc(ma.M, mb.N);
 
     double are, aim;
     for (int i = 0; i < ma.M; i++)
@@ -499,6 +508,7 @@ void Produto_matricial(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
             }
         }
     }
+    return ans;
 }
 
 // SVD

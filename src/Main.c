@@ -5,117 +5,58 @@
 #include <stdlib.h>
 ///@file Main.c
 
-#define number_bits 20
+#define number_bits 4
 int main()
 {
+    int index = 1;
+    int *bits = random_vector_int(number_bits, 4);
 
-    int Nt, Nr, Ntstreams, trans, index;
+    for (int i = 0; i < number_bits; i++)
+    {
 
-    Nt = 4;
+        printf("%d.| %d |\n",index,bits[i]);
+        index++;
+    }
 
-    Nr = 4;
+    printf("\n================QAM_MAPPER================\n\n");
 
-    Ntstreams = 3;
+    bfgs_vector vetor_complexo = tx_qam_mapper(bits,number_bits);
 
-    trans = 20;
+    vector_print(vetor_complexo);
 
-    index = 1;
+    printf("\n================LAYER_MAPPER================\n\n");
 
-    bfgs_matrix canal;
+    int Nr = 2;
+    int Nt = 2;
+    int Ntstreams = 2;
 
-    bfgs_matrix layer;
+    verify_nstreams(Nr,Nt,Ntstreams);
 
-    bfgs_vector teste;
+    bfgs_matrix matrix_complexo = tx_layer_mapper(vetor_complexo,Nt,Ntstreams);
 
-    int *bits;
+    matrix_print(matrix_complexo);
 
-    int *teste_reverso;
+    printf("\n================CHANNEL_GEN================\n\n");
 
-    //bits = random_vector_int(number_bits, 4);
+    bfgs_matrix canal = channel_gen(Nr,Nt);
 
-    //for (int i = 0; i < number_bits; i++)
-   // {
+    matrix_print(canal);
+    
+    printf("\n================CHANNEL_NOISE================\n\n");
 
-   //     printf("%d.|%d|\n", index, bits[i]);
-   //     index++;
-   // }
 
-    printf("========== QAM_MAPPER =========\n");
+    printf("\n================CHANNEL_TRANSMISSION================\n\n");
 
-    teste = tx_qam_mapper(bits, number_bits);
 
-    vector_print(teste);
+    bfgs_matrix canal_trans = matrix_alloc(Nr,Ntstreams);
 
-    printf("========== LAYER_MAPPER =========\n");
+    canal_trans = channel_transmission(matrix_complexo,canal,0);
 
-    verify_nstreams(Nt, Nr, Ntstreams);
-
-    layer = tx_layer_mapper(teste, Ntstreams, trans);
-
-    matrix_print(layer);
-
-    printf("========== CHANNEL =========\n");
-
-  
-
-    //matrix_print(canal);
-
-    /*    printf("========== QAM_DEMAPPER =========\n");
-
-        teste_reverso = rx_qam_demapper(teste,number_bits);
-
-        for(int j = 0; j < number_bits; j++){
-            printf("%d.|%d|\n",indexj, teste_reverso[j]);
-            indexj++;
-
-        }*/
-
-    vector_free(teste);
+    matrix_print(canal_trans);   
 
     free(bits);
-
-    free(teste_reverso);
-
-    matrix_free(layer);
-
-    matrix_free(canal);   
-
-    return (0);
+    vector_free(vetor_complexo);
+    matrix_free(matrix_complexo);
+    matrix_free(canal);
+    matrix_free(canal_trans);
 }
-//=========================================================================================================================
-
-/*
-    double *random_num = malloc(sizeof(double)*10);
-    srand(time(0));
-
-    for(int a = 0; a < 10; a++){
-    random_num[a] = ((double)rand())/RAND_MAX*2 - 1;
-    printf("%lf\n",random_num[a]);
-
-    }
-    free(random_num);
-*/
-//=========================================================================================================================
-
-/*
-    bfgs_vector vector = vector_alloc(4);
-    vector.data[0] = (complexo){-1,1};
-    vector.data[1] = (complexo){-1,-1};
-    vector.data[2] = (complexo){1,1};
-    vector.data[3] = (complexo){1,-1};
-
-    rx_qam_demapper(vector);
-
-    vector_free(vector);
-*/
-
-//=========================================================================================================================
-
-/*
-    printf("=====Equipe====\n\nWellerson Nascimento, Matricula = 202206840045\n\nNestor Carmo, Matricula = 202206840052\n\n");
-    printf("so pra ver se ta funfando\n\n");
-
-    Teste_geral();
-
-    return (0);
-*/
