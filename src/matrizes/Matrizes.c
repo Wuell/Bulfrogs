@@ -47,7 +47,7 @@ void matrix_print(bfgs_matrix ma){
 
     for (int i = 0; i < ma.M; i++){
         for (int j = 0; j < ma.N; j++){
-            printf("| %.2f + %.2f |", matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
+            printf("| %+-8.2f %+-.2f |", matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
         }
         printf("\n\n");
     }
@@ -89,10 +89,10 @@ void vector_print(bfgs_vector v){
 }
 
 //------------------------------------------Misc
-bfgs_int_vector int_vector_alloc(int l){
+bfgs_int_vector int_vector_alloc(int len){
     bfgs_int_vector temp;
-    temp.data = (int*) malloc(l * sizeof(int));
-    temp.len = l;
+    temp.data = (int*) malloc(len * sizeof(int));
+    temp.len = len;
     return temp;
 }
 
@@ -100,6 +100,38 @@ char* char_vector_alloc(int len){
 
     char* vector = (char*) malloc(len * sizeof(char));
     return vector;
+}
+
+void mat2base(bfgs_matrix v, bfgs_matrix base){
+
+    for (int i = 0; i < base.M; i++){
+        for (int j = 0; j < base.N; j++){
+            
+            if (i <= v.M && j <= v.N){
+                matrix_change(base, i, j, matrix_get(v, i, j));
+            }
+            else{
+                matrix_change(base, i, j, (complexo) {0,0});
+            }
+        }
+    } 
+
+}
+bfgs_matrix vec2matsqr(bfgs_vector v){
+
+    bfgs_matrix base = matrix_alloc(v.len, v.len);
+    for (int i = 0; i < v.len; i++){
+        for (int j = 0; j < v.len; j++){
+            
+            if (i == j){
+                matrix_change(base, i, j, vector_get(v, i));
+            }
+            else{
+                matrix_change(base, i, j, (complexo) {0,0});
+            }
+        }
+    } 
+    return base;
 }
 
 // PRINT_MATRIZ
@@ -446,7 +478,7 @@ void teste_produto_complexo()
 */
 
 // PRODUTO MATRICIAL
-void teste_produto_matricial()
+void Teste_produto_matricial()
 {
     printf("======Teste do produto matricial======");
     
@@ -487,6 +519,7 @@ void teste_produto_matricial()
 void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans)
 {   
     //vericando se ma pode fazer a operacao com mb
+    /*
     if (ma.N != mb.M){
 
         printf("\n---ERROR---Matrizes de tamanhos incompativeis, ma[N] != mb[M]");
@@ -494,7 +527,7 @@ void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans)
         exit(EXIT_SUCCESS);
 
     }
-
+    */
     double are, aim;
     for (int i = 0; i < ma.M; i++)
     {
@@ -646,6 +679,41 @@ void Calc_svd(bfgs_matrix Au, bfgs_matrix V, bfgs_vector S){
 
 }
 
+// INVERSA DE UMA MATRIZ
+bfgs_matrix inversa(bfgs_matrix m){
+
+    int a;
+    gsl_complex gcomp;
+    gsl_matrix_complex *mgsl = gsl_matrix_complex_alloc(m.M, m.N);
+    gsl_permutation * p = gsl_permutation_alloc(m.M);
+    bfgs_matrix in = matrix_alloc(m.M, m.N);
+
+    for (int i = 0; i < m.M; i++){
+        for (int j = 0; j < m.N; j++){
+            GSL_SET_COMPLEX(&gcomp, matrix_get(m, i, j).re, matrix_get(m, i, j).im);
+            gsl_matrix_complex_set(mgsl, i, j, gcomp);
+        }
+    }
+
+    gsl_linalg_complex_LU_decomp(mgsl, p, &a);
+    
+    gsl_matrix_complex *inv = gsl_matrix_complex_alloc(m.M, m.N);
+    gsl_linalg_complex_LU_invert(mgsl, p, inv);
+
+    for (int i = 0; i < m.N; i++){
+        for (int j = 0; j < m.N; j++){
+            gcomp = gsl_matrix_complex_get(inv, i, j);
+            matrix_change(in, i, j, (complexo) {GSL_REAL(gcomp), GSL_IMAG(gcomp)});
+        }
+    }
+
+    gsl_permutation_free(p);
+    gsl_matrix_complex_free(mgsl);
+    gsl_matrix_complex_free(inv);
+
+    return in;
+}
+
 // TESTE GERAL
 void Teste_geral()
 {
@@ -656,7 +724,7 @@ void Teste_geral()
     teste_soma();
     teste_subtracao();
     teste_produto_escalar();
-    teste_produto_matricial();
+    Teste_produto_matricial();
     Teste_calc_svd();
 
 }

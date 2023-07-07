@@ -150,6 +150,10 @@ void vector_print(bfgs_vector v);
 bfgs_int_vector int_vector_alloc(int len);
 
 char* char_vector_alloc(int len);
+
+void mat2base(bfgs_matrix v, bfgs_matrix base);
+
+bfgs_matrix vec2matsqr(bfgs_vector v);
 //-------------------------------------------------------------------------PRINTERS
 
 /// @brief Imprime a modificacao das matrizes A e B e o resultado de alguma operacao, de forma padrao.
@@ -282,7 +286,7 @@ complexo Produto_escalar(bfgs_vector va, bfgs_vector vb);
 //-------------------------PRODUTO MATRICIAL
 
 ///Testa a funcao de produto matricial.
-void Teste_produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans);
+void Teste_produto_matricial();
 
 /**
 * Calcula o produto entre as matrizes A e B e armazena o resultado na matriz disponibilizada Resultado.
@@ -341,15 +345,19 @@ void Aux_teste_svd(bfgs_matrix A);
  * @remark Nao ha suporte a matrizes com parte imaginaria, apenas reais.
  * @remark Sendo que necessariamente M >= N.
  * @remark Ultilizando a funcao gsl_linalg_SV_decomp da Gnu Scientific Library.
- * @param[in] M Numero de linhas da matriz A.
- * @param[in] N Numero de colunas da matriz A.
- * @param[in] Au Matriz A em que vai ser guardado a matrix U de saida.
+ * @param[in] Au Matriz A em que esta a matrix a ser operada, e vai ser guardado a matrix U de saida.
  * @param[out] V Matriz V em que vai ser guardado o resultado dos calculos de V.
  * @param[out] S Vetor S em que vai ser guardado o valor da diagonal da matriz S.
  * @return matrizes U, V e S preenchidas com os valores correspondentes a operacao.
  */
 void Calc_svd(bfgs_matrix Au, bfgs_matrix V, bfgs_vector S);
 
+/**
+ * @brief Calcula a inversa da matriz bfgs dada e retorna em mi.
+ * @param m matriz que sera operada
+ * @return sera retornada a inversa da matriz m e sera guardada na matriz bfgs que chamou a funcao
+ */
+bfgs_matrix inversa(bfgs_matrix m);
 
 //-------------------------TESTE GERAL
 
