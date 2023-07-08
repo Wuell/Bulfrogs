@@ -11,9 +11,5 @@ int main()
 
     testa_a_porra_toda(12, 4, 4, 4);
 
-    free(bits);
-    vector_free(vetor_complexo);
-    matrix_free(matrix_complexo);
-    matrix_free(canal);
-    matrix_free(canal_trans);
+
 }
