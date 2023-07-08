@@ -165,7 +165,7 @@ void teste_transposta();
  * @param[out] Transposta de A
  */
 
-void Transposta(bfgs_matrix ma, bfgs_matrix ans);
+bfgs_matrix Transposta(bfgs_matrix m);
 
 //-------------------------CONJUGADA
 
@@ -195,7 +195,7 @@ void teste_hermitiana();
  * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
  * @param[out] Hermitiana de A
  */
-void Hermitiana(bfgs_matrix m, bfgs_matrix h);
+bfgs_matrix Hermitiana(bfgs_matrix m);
 
 //-------------------------SOMA
 

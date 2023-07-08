@@ -3,7 +3,7 @@
 
 bfgs_vector tx_qam_mapper(int *bits, int number_bits);
 
-int *rx_qam_demapper(bfgs_vector complex_vector, int number_int);
+int *rx_qam_demapper(bfgs_vector complex_vector);
 
 void verify_nstreams(int Nr, int Nt, int Nstreams);
 
@@ -18,5 +18,13 @@ bfgs_matrix channel_gen(int Nr, int Nt);
 bfgs_matrix noise(int Nr,int Nt, double intervalR);
 
 bfgs_matrix channel_transmission(bfgs_matrix symbols, bfgs_matrix channel, double intervalR);
+
+void svd_channel(bfgs_matrix channel,bfgs_matrix u,bfgs_matrix v,bfgs_vector s);
+
+bfgs_matrix tx_precoder(bfgs_matrix signal,bfgs_matrix v);
+
+bfgs_vector rx_layer_demapper(bfgs_matrix complex_matrix);
+
+void testa_a_porra_toda(int number_bits,int Nr,int Nt, int Ntstreams);
 
 #endif

@@ -55,7 +55,7 @@ void matrix_print(bfgs_matrix ma)
     {
         for (int j = 0; j < ma.N; j++)
         {
-            printf("%d| %.2f %.2fj |\n", index, matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
+            printf("%*.*d%d| %.2f %+0.2fj |", 5, 0, i + 1, j + 1, matrix_get(ma, i, j).re, matrix_get(ma, i, j).im);
             index++;
         }
         printf("\n\n");
@@ -96,7 +96,7 @@ void vector_print(bfgs_vector v)
 
     for (int i = 0; i < v.len; i++)
     {
-        printf("%d.| %.2f %.2fj|\n", index, v.data[i].re, v.data[i].im);
+        printf("%2d.| %.2f %.2fj |\n", index, v.data[i].re, v.data[i].im);
         index++;
     }
     printf("\n");
@@ -127,16 +127,18 @@ void matrix_mod_print(bfgs_matrix m, bfgs_matrix ans) // Função de printar par
 
 // MATRIZ TRANSPOSTA
 
-void Transposta(bfgs_matrix m, bfgs_matrix mt)
+bfgs_matrix Transposta(bfgs_matrix m)
 {
+    bfgs_matrix M_Trans = matrix_alloc(m.M, m.N);
     for (int i = 0; i < m.M; i++)
     {
         for (int j = 0; j < m.N; j++)
         {
 
-            matrix_change(mt, i, j, matrix_get(m, j, i));
+            matrix_change(M_Trans, i, j, matrix_get(m, j, i));
         }
     }
+    return M_Trans;
 }
 
 void teste_transposta()
@@ -156,9 +158,9 @@ void teste_transposta()
     matrix_change(m, 2, 1, (complexo){8, -80});
     matrix_change(m, 2, 2, (complexo){9, -90});
 
-    bfgs_matrix mt = matrix_alloc(tamanho, tamanho);
+    bfgs_matrix mt;
 
-    Transposta(m, mt);
+    mt = Transposta(m);
     matrix_mod_print(m, mt);
 
     matrix_free(m);
@@ -206,11 +208,14 @@ void teste_conjugada()
 
 // MATRIZ HERMITIANA
 
-void Hermitiana(bfgs_matrix m, bfgs_matrix h)
+bfgs_matrix Hermitiana(bfgs_matrix m)
 {
+    bfgs_matrix h = matrix_alloc(m.M, m.N);
     bfgs_matrix aux = matrix_alloc(m.M, m.N);
     Conjugada(m, aux);
-    Transposta(aux, h);
+    h = Transposta(aux);
+
+    return h;
 }
 
 void teste_hermitiana()
@@ -230,9 +235,9 @@ void teste_hermitiana()
     matrix_change(m, 2, 1, (complexo){8, -60});
     matrix_change(m, 2, 2, (complexo){9, -54});
 
-    bfgs_matrix h = matrix_alloc(tamanho, tamanho);
+    bfgs_matrix h;
 
-    Hermitiana(m, h);
+    h = Hermitiana(m);
     matrix_mod_print(m, h);
 
     matrix_free(m);
@@ -256,7 +261,7 @@ bfgs_matrix Soma(bfgs_matrix ma, bfgs_matrix mb)
     for (int i = 0; i < ma.M; i++)
         for (int j = 0; j < ma.N; j++)
         {
-            matrix_change(ans, i, j, (complexo){matrix_get(ma,i,j).re + matrix_get(mb,i,j).re, matrix_get(ma,i,j).im + matrix_get(mb,i,j).im});
+            matrix_change(ans, i, j, (complexo){matrix_get(ma, i, j).re + matrix_get(mb, i, j).re, matrix_get(ma, i, j).im + matrix_get(mb, i, j).im});
         }
     return ans;
 }
@@ -289,8 +294,6 @@ void teste_soma()
     mb.data[6] = (complexo){-15, 10};
     mb.data[7] = (complexo){45, -6};
     mb.data[8] = (complexo){-1, 99};
-
-    
 
     ans = Soma(ma, mb);
     // matrix_op_print(ma, mb, ans);
