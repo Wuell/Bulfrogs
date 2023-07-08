@@ -26,6 +26,7 @@ bfgs_matrix tx_precoder(bfgs_matrix signal,bfgs_matrix v);
 bfgs_vector rx_layer_demapper(bfgs_matrix complex_matrix);
 
 void testa_a_porra_toda(int number_bits,int Nr,int Nt, int Ntstreams);
+
 bfgs_int_vector tx_data_read(char* name);
 
 void rx_data_write(char* name, bfgs_int_vector objct);
