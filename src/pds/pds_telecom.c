@@ -1,16 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../matrizes/Matrizes.h"
-#include "pds_telecom.h"
-
-
-void main(){
-
-}
+#include "Pds_telecom.h"
 
 bfgs_int_vector rx_data_read(char* name){
 
-    char v;
+    int v;
     int len = 0;
 
     FILE* eye = fopen(name, "rb");
@@ -90,7 +85,7 @@ void rx_data_write(char* fname, bfgs_int_vector objct){
         casa = 0;
         for (int j = i * 8, aux = 7; j < i * 8 + 8; j++, aux--){
 
-            casa += refrmtd.data[j ] << aux;
+            casa += refrmtd.data[j] << aux;
         }
 
         asc[i] = casa;
@@ -110,3 +105,33 @@ void rx_data_write(char* fname, bfgs_int_vector objct){
     free(asc);
     free(refrmtd.data);
 }
+
+    bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
+
+        bfgs_matrix ms = vec2matsqr(s);
+        bfgs_matrix s_inv_sqr = inversa(ms);
+        
+        bfgs_matrix meq = Produto_matricial(data, s_inv_sqr);
+        matrix_print(meq);
+
+        bfgs_vector veq = vector_alloc(data.M * data.N);
+
+        for (int i = 0; i < data.N; i++){
+            for (int j = 0; j < data.M; j++){
+                vector_change(veq, (i * data.M) + j, matrix_get(meq, i, j));
+            }
+        }
+
+        matrix_free(ms);
+        matrix_free(s_inv_sqr);
+        matrix_free(meq);
+
+        return veq;
+    }
+
+    bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u){
+
+        bfgs_matrix comb = Produto_matricial(signal, u);
+
+        return comb;
+    }   

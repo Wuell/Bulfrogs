@@ -151,8 +151,6 @@ bfgs_int_vector int_vector_alloc(int len);
 
 char* char_vector_alloc(int len);
 
-void mat2base(bfgs_matrix v, bfgs_matrix base);
-
 bfgs_matrix vec2matsqr(bfgs_vector v);
 //-------------------------------------------------------------------------PRINTERS
 
@@ -297,7 +295,7 @@ void Teste_produto_matricial();
 * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
 * @param[out] Produto entre A e B
 */
-void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans);
+bfgs_matrix Produto_matricial(bfgs_matrix ma , bfgs_matrix mb);
 
 
 

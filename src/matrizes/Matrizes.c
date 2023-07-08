@@ -102,21 +102,6 @@ char* char_vector_alloc(int len){
     return vector;
 }
 
-void mat2base(bfgs_matrix v, bfgs_matrix base){
-
-    for (int i = 0; i < base.M; i++){
-        for (int j = 0; j < base.N; j++){
-            
-            if (i <= v.M && j <= v.N){
-                matrix_change(base, i, j, matrix_get(v, i, j));
-            }
-            else{
-                matrix_change(base, i, j, (complexo) {0,0});
-            }
-        }
-    } 
-
-}
 bfgs_matrix vec2matsqr(bfgs_vector v){
 
     bfgs_matrix base = matrix_alloc(v.len, v.len);
@@ -505,9 +490,7 @@ void Teste_produto_matricial()
     matrix_change(mb, 2, 1, (complexo){45, -6});
     matrix_change(mb, 2, 2, (complexo){-1, 99});
 
-    bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
-
-    Produto_matricial(ma, mb, ans);
+    bfgs_matrix ans = Produto_matricial(ma, mb);
     matrix_op_print(ma, mb, ans);
 
     matrix_free(ma);
@@ -516,18 +499,19 @@ void Teste_produto_matricial()
 
 }
 
-void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans)
+bfgs_matrix Produto_matricial(bfgs_matrix ma , bfgs_matrix mb)
 {   
     //vericando se ma pode fazer a operacao com mb
     /*
-    if (ma.N != mb.M){
+    */
+    bfgs_matrix ans = matrix_alloc(ma.M, mb.N);
+    if (ma.M != mb.N){
 
         printf("\n---ERROR---Matrizes de tamanhos incompativeis, ma[N] != mb[M]");
         printf("\n---Program interrupted.");
         exit(EXIT_SUCCESS);
 
     }
-    */
     double are, aim;
     for (int i = 0; i < ma.M; i++)
     {
@@ -544,6 +528,7 @@ void Produto_matricial(bfgs_matrix ma , bfgs_matrix mb , bfgs_matrix ans)
             }
         }
     }
+    return ans;
 }
 
 //SVD
