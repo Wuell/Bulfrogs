@@ -2,14 +2,14 @@
 #include "Matrizes.h"
 #include <time.h>
 #include "Pds_telecom.h"
+#include <stdlib.h>
 ///@file Main.c
 
+#define number_bits 4
 int main()
 {
-    printf("=====Equipe====\n\nWellerson Nascimento, Matricula = 202206840045\n\nNestor Carmo, Matricula = 202206840052\n\n");
-    printf("so pra ver se ta funfando\n\n");
 
-    Teste_geral();
+    testa_a_porra_toda(12, 4, 4, 4);
 
-    return (0);
+
 }
