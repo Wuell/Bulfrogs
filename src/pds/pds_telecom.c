@@ -5,7 +5,7 @@
 #include "Pds_telecom.h"
 #include <time.h>
 
-bfgs_vector tx_qam_mapper(int *bits, int number_bits)
+bfgs_vector tx_qam_mapper(bfgs_int_vector bits)
 {
 
     bfgs_vector complex_vector = vector_alloc(number_bits);
