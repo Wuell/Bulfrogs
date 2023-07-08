@@ -8,18 +8,18 @@
 bfgs_vector tx_qam_mapper(bfgs_int_vector bits)
 {
 
-    bfgs_vector complex_vector = vector_alloc(number_bits);
+    bfgs_vector complex_vector = vector_alloc(bits.len);
 
-    for (int i = 0; i < number_bits; i++)
+    for (int i = 0; i < bits.len; i++)
     {
 
-        if (bits[i] == 0)
+        if (bits.data[i] == 0)
             vector_change(complex_vector, i, (complexo){-1, 1});
 
-        else if (bits[i] == 1)
+        else if (bits.data[i] == 1)
             vector_change(complex_vector, i, (complexo){-1, -1});
 
-        else if (bits[i] == 2)
+        else if (bits.data[i] == 2)
             vector_change(complex_vector, i, (complexo){1, 1});
 
         else
@@ -28,9 +28,9 @@ bfgs_vector tx_qam_mapper(bfgs_int_vector bits)
     return complex_vector;
 }
 
-int *rx_qam_demapper(bfgs_vector complex_vector)
+bfgs_int_vector rx_qam_demapper(bfgs_vector complex_vector)
 {
-    int *int_vector = malloc(sizeof(int) * 4);
+    bfgs_int_vector int_vector = malloc(sizeof(int) * 4);
 
     for (int i = 0; i < complex_vector.len; i++)
     {
@@ -38,22 +38,25 @@ int *rx_qam_demapper(bfgs_vector complex_vector)
         {
 
             if (vector_get(complex_vector, i).re == -1 && vector_get(complex_vector, i).im == 1)
-                int_vector[i] = 0;
+                int_vector.data[i] = 0;
 
             else if (vector_get(complex_vector, i).re == -1 && vector_get(complex_vector, i).im == -1)
-                int_vector[i] = 1;
+                int_vector.data[i] = 1;
 
             else if (vector_get(complex_vector, i).re == 1 && vector_get(complex_vector, i).im == 1)
-                int_vector[i] = 2;
+                int_vector.data[i] = 2;
 
             else if (vector_get(complex_vector, i).re == 1 && vector_get(complex_vector, i).im == -1)
-                int_vector[i] = 3;
+                int_vector.data[i] = 3;
         }
         else
         {
             printf("A função QAM_MAPPER não conseguiu rodar devido a falta de dados\n");
             break;
         }
+    }
+    return int_vector;
+}
 
 bfgs_int_vector tx_data_read(char* name){
 
