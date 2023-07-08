@@ -39,5 +39,9 @@ clean:
 
 make doc:
 	
+<<<<<<< HEAD
 	doxygen Doxyfile
 	
+=======
+	doxygen Doxyfile
+>>>>>>> d316f21ba7769950815ec21e18d7284977b82f08
