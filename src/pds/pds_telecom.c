@@ -4,21 +4,21 @@
 #include "pds_telecom.h"
 #include <time.h>
 
-bfgs_vector tx_qam_mapper(int *bits, int number_bits)
+bfgs_vector tx_qam_mapper(bfgs_int_vector bits)
 {
-
+    int number_bits = bits.len;
     bfgs_vector complex_vector = vector_alloc(number_bits);
 
     for (int i = 0; i < number_bits; i++)
     {
 
-        if (bits[i] == 0)
+        if (bits.data[i] == 0)
             vector_change(complex_vector, i, (complexo){-1, 1});
 
-        else if (bits[i] == 1)
+        else if (bits.data[i] == 1)
             vector_change(complex_vector, i, (complexo){-1, -1});
 
-        else if (bits[i] == 2)
+        else if (bits.data[i] == 2)
             vector_change(complex_vector, i, (complexo){1, 1});
 
         else
@@ -27,9 +27,9 @@ bfgs_vector tx_qam_mapper(int *bits, int number_bits)
     return complex_vector;
 }
 
-int *rx_qam_demapper(bfgs_vector complex_vector)
+bfgs_int_vector rx_qam_demapper(bfgs_vector complex_vector)
 {
-    int *int_vector = malloc(sizeof(int) * 4);
+    bfgs_int_vector int_vector = int_vector_alloc(complex_vector.len);
 
     for (int i = 0; i < complex_vector.len; i++)
     {
@@ -37,16 +37,16 @@ int *rx_qam_demapper(bfgs_vector complex_vector)
         {
 
             if (vector_get(complex_vector, i).re == -1 && vector_get(complex_vector, i).im == 1)
-                int_vector[i] = 0;
+                int_vector.data[i] = 0;
 
             else if (vector_get(complex_vector, i).re == -1 && vector_get(complex_vector, i).im == -1)
-                int_vector[i] = 1;
+                int_vector.data[i] = 1;
 
             else if (vector_get(complex_vector, i).re == 1 && vector_get(complex_vector, i).im == 1)
-                int_vector[i] = 2;
+                int_vector.data[i] = 2;
 
             else if (vector_get(complex_vector, i).re == 1 && vector_get(complex_vector, i).im == -1)
-                int_vector[i] = 3;
+                int_vector.data[i] = 3;
         }
         else
         {
@@ -228,6 +228,9 @@ void svd_channel(bfgs_matrix channel, bfgs_matrix u, bfgs_matrix v, bfgs_vector 
         }
     }
 
+    printf("\n");
+    printf("\n");
+    printf("\n");
     Calc_svd(u, v, s);
 
     for (int i = 0; i < channel.M; i++)
@@ -269,7 +272,7 @@ bfgs_vector rx_layer_demapper(bfgs_matrix complex_matrix)
 
     return layer_demapper;
 }
-
+/*
 void testa_a_porra_toda(int number_bits, int Nr, int Nt, int Ntstreams)
 {
     int index = 1;
@@ -369,6 +372,7 @@ void testa_a_porra_toda(int number_bits, int Nr, int Nt, int Ntstreams)
     matrix_free(precoce);
     vector_free(demapper_do_layer);
 }
+*/
 
 bfgs_int_vector tx_data_read(char* name){
 
@@ -470,7 +474,7 @@ void rx_data_write(char* fname, bfgs_int_vector objct){
     free(refrmtd.data);
 }
 
-bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
+bfgs_vector rx_feq(bfgs_vector s, bfgs_matrix data){
     bfgs_matrix ms = vec2matsqr(s);
     bfgs_matrix s_inv_sqr = inversa(ms);
     
