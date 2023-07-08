@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../matrizes/Matrizes.h"
-#include "Pds_telecom.h"
+#include "pds_telecom.h"
 #include <time.h>
 
 bfgs_vector tx_qam_mapper(int *bits, int number_bits)
@@ -377,7 +377,6 @@ bfgs_int_vector tx_data_read(char* name){
     FILE* eye = fopen(name, "rb");
     if (eye == NULL){
         printf("ERROR--O arquivo nÃ£o foi aberto.\n");
-        printf("Error: %d ()\n", errno);
         fclose(eye);
         exit(1);
     }

@@ -62,20 +62,6 @@ typedef struct bfgs_int_vector{
 //--------------------------matrix handle
 
 /**
- * @brief 
- * 
- */
-typedef struct bfgs_int_vector{
-
-    /// @brief 
-    int* data; 
-    /// @brief
-    int  len;
-
-} bfgs_int_vector;
-//--------------------------matrix handle
-
-/**
  * @brief
  *
  * @param M

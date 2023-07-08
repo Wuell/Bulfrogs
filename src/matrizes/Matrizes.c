@@ -146,8 +146,9 @@ void matrix_mod_print(bfgs_matrix m, bfgs_matrix ans) // Função de printar par
 
 // MATRIZ TRANSPOSTA
 
-void Transposta(bfgs_matrix m, bfgs_matrix mt)
+bfgs_matrix Transposta(bfgs_matrix m)
 {
+    bfgs_matrix mt = matrix_alloc(m.N, m.M);
     for (int i = 0; i < m.M; i++){
         for (int j = 0; j < m.N; j++){
             
@@ -155,6 +156,7 @@ void Transposta(bfgs_matrix m, bfgs_matrix mt)
         
         }
     }
+    return mt;
 }
 
 void teste_transposta()
@@ -174,9 +176,7 @@ void teste_transposta()
     matrix_change(m, 2, 1, (complexo){8, -80});
     matrix_change(m, 2, 2, (complexo){9, -90});
 
-    bfgs_matrix mt = matrix_alloc(tamanho, tamanho);
-
-    Transposta(m, mt);
+    bfgs_matrix mt = Transposta(m);
     matrix_mod_print(m, mt);
 
     matrix_free(m);
@@ -226,18 +226,19 @@ void teste_conjugada()
 
 // MATRIZ HERMITIANA
 
-void Hermitiana(bfgs_matrix m, bfgs_matrix h)
+bfgs_matrix Hermitiana(bfgs_matrix m)
 {
+    bfgs_matrix h = matrix_alloc(m.M, m.N);
     bfgs_matrix aux = matrix_alloc(m.M, m.N);
     Conjugada(m, aux);
-    Transposta(aux, h);
-    
-}
+    h = Transposta(aux);
 
+    return h;
+}
 void teste_hermitiana()
 {
     printf("======Teste da operacao Hermitiana======");
-    
+
     int tamanho = 3;
 
     bfgs_matrix m = matrix_alloc(tamanho, tamanho);
@@ -251,40 +252,43 @@ void teste_hermitiana()
     matrix_change(m, 2, 1, (complexo){8, -60});
     matrix_change(m, 2, 2, (complexo){9, -54});
 
-    bfgs_matrix h = matrix_alloc(tamanho, tamanho);
+    bfgs_matrix h;
 
-    Hermitiana(m, h);
+    h = Hermitiana(m);
     matrix_mod_print(m, h);
 
     matrix_free(m);
     matrix_free(h);
-
 }
 
 /// SOMA
 
-void Soma(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans)
+bfgs_matrix Soma(bfgs_matrix ma, bfgs_matrix mb)
 {
-    if (ma.M != mb.M || ma.N != mb.N){
+    if (ma.M != mb.M || ma.N != mb.N)
+    {
 
         printf("\n---ERROR---Matrizes de tamanhos incompativeis");
         printf("\n---Program interrupted.");
         exit(EXIT_SUCCESS);
-
     }
+
+    bfgs_matrix ans = matrix_alloc(ma.M, ma.N);
 
     for (int i = 0; i < ma.M; i++)
         for (int j = 0; j < ma.N; j++)
         {
-            matrix_change(ans, i, j,(complexo) {matrix_get(ma, i, j).re + matrix_get(mb, i, j).re, matrix_get(ma, i, j).im + matrix_get(mb, i, j).im});
+            matrix_change(ans, i, j, (complexo){matrix_get(ma, i, j).re + matrix_get(mb, i, j).re, matrix_get(ma, i, j).im + matrix_get(mb, i, j).im});
         }
+    return ans;
 }
-
 void teste_soma()
 {
-    printf("======Teste da operacao Soma======");
-    
+    printf("======Teste da operacao Soma======\n\n");
+
     int tamanho = 3;
+
+    bfgs_matrix ans;
     bfgs_matrix ma = matrix_alloc(tamanho, tamanho);
     ma.data[0] = (complexo){2, 7};
     ma.data[1] = (complexo){1, -5};
@@ -307,10 +311,10 @@ void teste_soma()
     mb.data[7] = (complexo){45, -6};
     mb.data[8] = (complexo){-1, 99};
 
-    bfgs_matrix ans = matrix_alloc(tamanho, tamanho);
+    ans = Soma(ma, mb);
+    // matrix_op_print(ma, mb, ans);
 
-    Soma(ma, mb, ans);
-    matrix_op_print(ma, mb, ans);
+    matrix_print(ans);
 
     matrix_free(ma);
     matrix_free(mb);
