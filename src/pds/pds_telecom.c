@@ -369,3 +369,126 @@ void testa_a_porra_toda(int number_bits, int Nr, int Nt, int Ntstreams)
     matrix_free(precoce);
     vector_free(demapper_do_layer);
 }
+
+bfgs_int_vector tx_data_read(char* name){
+
+    int len = 0;
+
+    FILE* eye = fopen(name, "rb");
+    if (eye == NULL){
+        printf("ERROR--O arquivo nÃ£o foi aberto.\n");
+        printf("Error: %d ()\n", errno);
+        fclose(eye);
+        exit(1);
+    }
+    //figure out the lenght
+    while(1){
+        if (feof(eye)){
+            break;
+        }
+        fgetc(eye);
+        len++;
+    }
+    rewind(eye);
+
+    //transfer the data to an array
+    char* data = char_vector_alloc(len-1);
+    fgets(data, len, eye);
+    fclose(eye);
+    printf("Lendo o arquivo...\n");
+
+    bfgs_int_vector frmtd = int_vector_alloc(4*(len-1));
+    int b = 0;
+    int a;
+    int bin[8];
+    int ref[8] = {128, 64, 32, 16, 8, 4, 2, 1}; 
+
+    printf("Convertendo em binario...\n");
+    // transforma cada char em binario e volta pra decimal de 0 a 3.
+    for (int i = 0; i < len-1; i++){
+    
+        a = data[i];
+ 
+        //char to bin
+        for (int j =  0; j < 8; j++){
+            bin[j] = a / ref[j];
+            a = a - (bin[j] * ref[j]);
+        }
+
+        //bin to [0,3] dec
+        b = 0;
+        for (int l = i * 4; l < (i * 4) + 4; l++){
+            frmtd.data[l] = 0;
+    
+            if (bin[b*2 + 1] == 1){
+                frmtd.data[l] += 1;
+            }
+
+            if (bin[b*2] == 1){
+                frmtd.data[l] += 2;
+            }       
+            b += 1;
+        }  
+    }
+
+    free(data);
+    return frmtd;
+}
+
+void rx_data_write(char* fname, bfgs_int_vector objct){
+
+    bfgs_int_vector refrmtd = int_vector_alloc(objct.len*2);
+    char* asc = char_vector_alloc(refrmtd.len/8);
+    
+    printf("Convertendo os dados para binario...\n");
+    // dec[0,3] to bin
+    for (int i = 0; i < objct.len; i++){
+        refrmtd.data[2 * i]  = objct.data[i] / 2;
+        refrmtd.data[2 * i +1] = objct.data[i] % 2;
+    }
+
+    int casa;
+    // bin to char
+    for (int i = 0; i < refrmtd.len/8; i++){
+        
+        casa = 0;
+        for (int j = i * 8, aux = 7; j < i * 8 + 8; j++, aux--){
+
+            casa += refrmtd.data[j] << aux;
+        }
+
+        asc[i] = casa;
+
+    }
+    printf("Criando e escrevendo o novo arquivo...\n");
+    FILE* hand = fopen(fname, "w");
+
+    fputs(asc, hand);
+
+    fclose(hand);
+
+    free(asc);
+    free(refrmtd.data);
+}
+
+bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
+    bfgs_matrix ms = vec2matsqr(s);
+    bfgs_matrix s_inv_sqr = inversa(ms);
+    
+    bfgs_matrix meq = Produto_matricial(data, s_inv_sqr);
+    matrix_print(meq);
+    bfgs_vector veq = vector_alloc(data.M * data.N);
+    for (int i = 0; i < data.N; i++){
+        for (int j = 0; j < data.M; j++){
+            vector_change(veq, (i * data.M) + j, matrix_get(meq, i, j));
+        }
+    }
+    matrix_free(ms);
+    matrix_free(s_inv_sqr);
+    matrix_free(meq);
+    return veq;
+}
+bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u){
+    bfgs_matrix comb = Produto_matricial(signal, u);
+    return comb;
+}
