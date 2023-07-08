@@ -8,7 +8,7 @@
 int main()
 {
 
-    testa_a_porra_toda(12, 4, 4, 4);
+    testa_a_porra_toda(12, 5, 5, 5);
 
     return 0;
 }

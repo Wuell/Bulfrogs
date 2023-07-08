@@ -30,6 +30,7 @@ $(BUILD)/Main.o: $(SRC)/Main.c
 	gcc -o $(BUILD)/Main.o -c $(SRC)/Main.c -I $(SRCMt) -I $(SRCPds) -W -Wall -pedantic
 
 
+
 clean:
 
 	rm -rf aplicacao

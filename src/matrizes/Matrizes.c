@@ -100,6 +100,21 @@ void vector_print(bfgs_vector v)
         index++;
     }
     printf("\n");
+
+}
+
+//------------------------------------------Misc
+bfgs_int_vector int_vector_alloc(int l){
+    bfgs_int_vector temp;
+    temp.data = (int*) malloc(l * sizeof(int));
+    temp.len = l;
+    return temp;
+}
+
+char* char_vector_alloc(int len){
+
+    char* vector = (char*) malloc(len * sizeof(char));
+    return vector;
 }
 
 // PRINT_MATRIZ
