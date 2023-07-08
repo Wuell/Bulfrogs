@@ -515,6 +515,7 @@ bfgs_matrix Produto_matricial(bfgs_matrix ma , bfgs_matrix mb)
     //vericando se ma pode fazer a operacao com mb
     /*
     */
+    bfgs_matrix ans = matrix_alloc(ma.M, mb.N);
     if (ma.M != mb.N){
 
         printf("\n---ERROR---Matrizes de tamanhos incompativeis, ma[N] != mb[M]");
