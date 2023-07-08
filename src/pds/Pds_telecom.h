@@ -3,7 +3,7 @@
 
 bfgs_vector tx_qam_mapper(int *bits, int number_bits);
 
-int *rx_qam_demapper(bfgs_vector complex_vector);
+int *rx_qam_demapper(bfgs_vector complex_vector, int number_int);
 
 void verify_nstreams(int Nr, int Nt, int Nstreams);
 
