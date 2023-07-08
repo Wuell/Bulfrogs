@@ -1,25 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "../matrizes/Matrizes.h"
 #include "Pds_telecom.h"
 
-bfgs_int_vector rx_data_read(char* name){
+bfgs_int_vector tx_data_read(char* name){
 
-    int v;
     int len = 0;
 
     FILE* eye = fopen(name, "rb");
     if (eye == NULL){
-        printf("ERROR--O arquivo não foi aberto.");
-        exit(0);
+        printf("ERROR--O arquivo não foi aberto.\n");
+        printf("Error: %d ()\n", errno);
+        fclose(eye);
+        exit(1);
     }
-
     //figure out the lenght
     while(1){
         if (feof(eye)){
             break;
         }
-        v = fgetc(eye);
+        fgetc(eye);
         len++;
     }
     rewind(eye);
@@ -28,7 +29,7 @@ bfgs_int_vector rx_data_read(char* name){
     char* data = char_vector_alloc(len-1);
     fgets(data, len, eye);
     fclose(eye);
-    printf("foi transmitido a.txt = %s\n", data);
+    printf("Lendo o arquivo...\n");
 
     bfgs_int_vector frmtd = int_vector_alloc(4*(len-1));
     int b = 0;
@@ -36,6 +37,7 @@ bfgs_int_vector rx_data_read(char* name){
     int bin[8];
     int ref[8] = {128, 64, 32, 16, 8, 4, 2, 1}; 
 
+    printf("Convertendo em binario...\n");
     // transforma cada char em binario e volta pra decimal de 0 a 3.
     for (int i = 0; i < len-1; i++){
     
@@ -72,6 +74,7 @@ void rx_data_write(char* fname, bfgs_int_vector objct){
     bfgs_int_vector refrmtd = int_vector_alloc(objct.len*2);
     char* asc = char_vector_alloc(refrmtd.len/8);
     
+    printf("Convertendo os dados para binario...\n");
     // dec[0,3] to bin
     for (int i = 0; i < objct.len; i++){
         refrmtd.data[2 * i]  = objct.data[i] / 2;
@@ -91,47 +94,35 @@ void rx_data_write(char* fname, bfgs_int_vector objct){
         asc[i] = casa;
 
     }
+    printf("Criando e escrevendo o novo arquivo...\n");
+    FILE* hand = fopen(fname, "w");
 
-    printf("foi recebido = ");
-    for (int i = 0; i < refrmtd.len/8; i++){
-        printf("%d ", asc[i]);
-    }
-        printf("\n");
-    for (int i = 0; i < refrmtd.len/8; i++){
-        printf("%c ", asc[i]);
-    }
-        printf("\n%s ", asc);
+    fputs(asc, hand);
+
+    fclose(hand);
 
     free(asc);
     free(refrmtd.data);
 }
 
-    bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
-
-        bfgs_matrix ms = vec2matsqr(s);
-        bfgs_matrix s_inv_sqr = inversa(ms);
-        
-        bfgs_matrix meq = Produto_matricial(data, s_inv_sqr);
-        matrix_print(meq);
-
-        bfgs_vector veq = vector_alloc(data.M * data.N);
-
-        for (int i = 0; i < data.N; i++){
-            for (int j = 0; j < data.M; j++){
-                vector_change(veq, (i * data.M) + j, matrix_get(meq, i, j));
-            }
+bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
+    bfgs_matrix ms = vec2matsqr(s);
+    bfgs_matrix s_inv_sqr = inversa(ms);
+    
+    bfgs_matrix meq = Produto_matricial(data, s_inv_sqr);
+    matrix_print(meq);
+    bfgs_vector veq = vector_alloc(data.M * data.N);
+    for (int i = 0; i < data.N; i++){
+        for (int j = 0; j < data.M; j++){
+            vector_change(veq, (i * data.M) + j, matrix_get(meq, i, j));
         }
-
-        matrix_free(ms);
-        matrix_free(s_inv_sqr);
-        matrix_free(meq);
-
-        return veq;
     }
-
-    bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u){
-
-        bfgs_matrix comb = Produto_matricial(signal, u);
-
-        return comb;
-    }   
+    matrix_free(ms);
+    matrix_free(s_inv_sqr);
+    matrix_free(meq);
+    return veq;
+}
+bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u){
+    bfgs_matrix comb = Produto_matricial(signal, u);
+    return comb;
+}   
