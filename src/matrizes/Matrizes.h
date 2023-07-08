@@ -21,13 +21,13 @@ typedef struct complexo complexo;
 typedef struct bfgs_matrix
 {
 
-    /// @brief Ponteiro de uma dimensao e que serao guardados os dados e sera usada como uma matriz.
+    /// @brief 
     complexo *data;
-    /// @brief Numero de linhas da matriz.
+    /// @brief 
     int M;
-    /// @brief Numero de colunas da matriz.
+    /// @brief 
     int N;
-    /// @brief Registrador de alocacao
+    /// @brief 
     int is_alloc;
 
 } bfgs_matrix;
@@ -150,8 +150,9 @@ void vector_print(bfgs_vector v);
 //-------------------------------------------------------------------------Miscellaneous
 bfgs_int_vector int_vector_alloc(int len);
 
-char* char_vector_alloc(int len);
-//-------------------------------------------------------------------------PRINTERS
+//-------------------------Miscellaneous
+
+//-------------------------PRINTERS
 
 /// @brief Imprime a modificacao das matrizes A e B e o resultado de alguma operacao, de forma padrao.
 /// @param ma matriz A
