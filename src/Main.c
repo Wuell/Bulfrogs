@@ -8,10 +8,6 @@
 #define number_bits 4
 int main()
 {
-<<<<<<< HEAD
-
-    testa_a_porra_toda(12, 4, 4, 4);
-=======
     int nstreams = 3;
     int nt = 5;
     int nr = 5;
@@ -39,12 +35,9 @@ int main()
     bfgs_matrix v = matrix_alloc(nstreams, nstreams);
     bfgs_vector s = vector_alloc(nstreams);
     svd_channel(channel, u, v, s);
->>>>>>> bed7a69 (Resolvendo produto matricial)
 
     bfgs_matrix pre_cdr = tx_precoder(symbols, v);
 
-<<<<<<< HEAD
-=======
     printf("eu vim aqui2\n");
 
     printf("Channel\n%d %d\n", chnnl_tr.M, chnnl_tr.N);
@@ -78,5 +71,4 @@ int main()
     free(tst.data);
 
     return (0);
->>>>>>> bed7a69 (Resolvendo produto matricial)
 }
