@@ -516,7 +516,7 @@ bfgs_matrix Produto_matricial(bfgs_matrix ma , bfgs_matrix mb)
     /*
     */
 
-    if (ma.M != mb.N){
+    if (ma.N != mb.M){
 
         printf("\n---ERROR---Matrizes de tamanhos incompativeis, ma[N] != mb[M]");
         printf("\n---Program interrupted.");

@@ -30,7 +30,7 @@ bfgs_vector tx_qam_mapper(bfgs_int_vector bits)
 
 bfgs_int_vector rx_qam_demapper(bfgs_vector complex_vector)
 {
-    bfgs_int_vector int_vector = malloc(sizeof(int) * 4);
+    bfgs_int_vector transforma_complex = int_vector_alloc(complex_vector.len);
 
     for (int i = 0; i < complex_vector.len; i++)
     {
@@ -38,16 +38,16 @@ bfgs_int_vector rx_qam_demapper(bfgs_vector complex_vector)
         {
 
             if (vector_get(complex_vector, i).re == -1 && vector_get(complex_vector, i).im == 1)
-                int_vector.data[i] = 0;
+                transforma_complex.data[i] = 0;
 
             else if (vector_get(complex_vector, i).re == -1 && vector_get(complex_vector, i).im == -1)
-                int_vector.data[i] = 1;
+                transforma_complex.data[i] = 1;
 
             else if (vector_get(complex_vector, i).re == 1 && vector_get(complex_vector, i).im == 1)
-                int_vector.data[i] = 2;
+                transforma_complex.data[i] = 2;
 
             else if (vector_get(complex_vector, i).re == 1 && vector_get(complex_vector, i).im == -1)
-                int_vector.data[i] = 3;
+                transforma_complex.data[i] = 3;
         }
         else
         {
@@ -55,23 +55,27 @@ bfgs_int_vector rx_qam_demapper(bfgs_vector complex_vector)
             break;
         }
     }
-    return int_vector;
+    return transforma_complex;
 }
 
-bfgs_int_vector tx_data_read(char* name){
+bfgs_int_vector tx_data_read(char *name)
+{
 
     int len = 0;
 
-    FILE* eye = fopen(name, "rb");
-    if (eye == NULL){
+    FILE *eye = fopen(name, "rb");
+    if (eye == NULL)
+    {
         printf("ERROR--O arquivo não foi aberto.\n");
         printf("Error: %d ()\n", errno);
         fclose(eye);
         exit(1);
     }
-    //figure out the lenght
-    while(1){
-        if (feof(eye)){
+    // figure out the lenght
+    while (1)
+    {
+        if (feof(eye))
+        {
             break;
         }
         fgetc(eye);
@@ -79,47 +83,52 @@ bfgs_int_vector tx_data_read(char* name){
     }
     rewind(eye);
 
-    //transfer the data to an array
-    char* data = char_vector_alloc(len-1);
+    // transfer the data to an array
+    char *data = char_vector_alloc(len - 1);
     fgets(data, len, eye);
     fclose(eye);
     printf("Lendo o arquivo...\n");
 
-    bfgs_int_vector frmtd = int_vector_alloc(4*(len-1));
+    bfgs_int_vector frmtd = int_vector_alloc(4 * (len - 1));
     int b = 0;
     int a;
     int bin[8];
-    int ref[8] = {128, 64, 32, 16, 8, 4, 2, 1}; 
+    int ref[8] = {128, 64, 32, 16, 8, 4, 2, 1};
 
     printf("Convertendo em binario...\n");
     // transforma cada char em binario e volta pra decimal de 0 a 3.
-    for (int i = 0; i < len-1; i++){
-    
+    for (int i = 0; i < len - 1; i++)
+    {
+
         a = data[i];
- 
-        //char to bin
-        for (int j =  0; j < 8; j++){
+
+        // char to bin
+        for (int j = 0; j < 8; j++)
+        {
             bin[j] = a / ref[j];
             a = a - (bin[j] * ref[j]);
         }
 
-        //bin to [0,3] dec
+        // bin to [0,3] dec
         b = 0;
-        for (int l = i * 4; l < (i * 4) + 4; l++){
+        for (int l = i * 4; l < (i * 4) + 4; l++)
+        {
             frmtd.data[l] = 0;
-    
-            if (bin[b*2 + 1] == 1){
+
+            if (bin[b * 2 + 1] == 1)
+            {
                 frmtd.data[l] += 1;
             }
 
-            if (bin[b*2] == 1){
+            if (bin[b * 2] == 1)
+            {
                 frmtd.data[l] += 2;
-            }       
+            }
             b += 1;
-        }  
+        }
     }
 
-    return int_vector;
+    return frmtd;
 }
 
 void verify_nstreams(int Nr, int Nt, int Nstreams)
@@ -171,18 +180,6 @@ bfgs_vector random_vector_com(int len, int intervalMod)
     {
         vector_change(vector, i, (complexo){rand() % range - intervalMod, rand() % range - intervalMod});
     }
-    return vector;
-}
-
-int *random_vector_int(int len, int number_bits)
-{
-
-    int *vector = malloc(sizeof(int) * len);
-    srand(time(0));
-
-    for (int i = 0; i < len; i++)
-        vector[i] = rand() % number_bits;
-
     return vector;
 }
 
@@ -333,130 +330,36 @@ bfgs_vector rx_layer_demapper(bfgs_matrix complex_matrix)
 
     return layer_demapper;
 }
-
-void testa_a_porra_toda(int number_bits, int Nr, int Nt, int Ntstreams)
+void rx_data_write(char *fname, bfgs_int_vector objct)
 {
-    int index = 1;
-    int index_rx = 1;
 
-    printf("\n================TESTANDO_TUDO_CARALHO================\n\n");
+    bfgs_int_vector refrmtd = int_vector_alloc(objct.len * 2);
+    char *asc = char_vector_alloc(refrmtd.len / 8);
 
-    int *bits = random_vector_int(number_bits, 4);
-
-    for (int i = 0; i < number_bits; i++)
-    {
-
-        printf("%d.| %d |\n", index, bits[i]);
-        index++;
-    }
-
-    printf("\n================QAM_MAPPER================\n\n");
-
-    bfgs_vector vetor_complexo = tx_qam_mapper(bits, number_bits);
-
-    vector_print(vetor_complexo);
-
-    printf("\n================LAYER_MAPPER================\n\n");
-
-    verify_nstreams(Nr, Nt, Ntstreams);
-
-    bfgs_matrix matrix_complexo = tx_layer_mapper(vetor_complexo, Nt, Ntstreams);
-
-    matrix_print(matrix_complexo);
-
-    printf("\n================CHANNEL_GEN================\n\n");
-
-    bfgs_matrix canal = channel_gen(Nr, Nt);
-
-    matrix_print(canal);
-
-    printf("\n================CHANNEL_TRANSMISSION================\n\n");
-
-    bfgs_matrix canal_trans;
-
-    canal_trans = channel_transmission(matrix_complexo, canal, 0);
-
-    matrix_print(canal_trans);
-
-    printf("\n================SVD================\n\n");
-
-    bfgs_matrix u = matrix_alloc(Nr, Ntstreams);
-    bfgs_matrix v = matrix_alloc(Ntstreams, Ntstreams);
-    bfgs_vector s = vector_alloc(Ntstreams);
-
-    svd_channel(canal_trans, u, v, s);
-
-    printf("===============U===============\n\n");
-
-    matrix_print(canal_trans);
-
-    printf("===============S===============\n\n");
-
-    vector_print(s);
-
-    printf("===============V(Herm)===============\n\n");
-
-    matrix_print(v);
-
-    printf("\n================PRECODER================\n\n");
-
-    bfgs_matrix precoce;
-
-    precoce = tx_precoder(matrix_complexo, v);
-
-    matrix_print(precoce);
-
-    printf("\n================LAYER_DEMAPPER================\n\n");
-
-    bfgs_vector demapper_do_layer = rx_layer_demapper(matrix_complexo);
-
-    vector_print(demapper_do_layer);
-
-    printf("\n================QAX_DEMAPPER================\n\n");
-
-    int *bits_volta = rx_qam_demapper(vetor_complexo);
-
-    for (int i = 0; i < number_bits; i++)
-    {
-        printf("%d.| %d |\n", index_rx, bits_volta[i]);
-        index_rx++;
-    }
-
-    free(bits);
-    vector_free(vetor_complexo);
-    matrix_free(matrix_complexo);
-    matrix_free(canal);
-    matrix_free(canal_trans);
-    matrix_free(u);
-    matrix_free(v);
-    vector_free(s);
-    matrix_free(precoce);
-    vector_free(demapper_do_layer);
-    bfgs_int_vector refrmtd = int_vector_alloc(objct.len*2);
-    char* asc = char_vector_alloc(refrmtd.len/8);
-    
     printf("Convertendo os dados para binario...\n");
     // dec[0,3] to bin
-    for (int i = 0; i < objct.len; i++){
-        refrmtd.data[2 * i]  = objct.data[i] / 2;
-        refrmtd.data[2 * i +1] = objct.data[i] % 2;
+    for (int i = 0; i < objct.len; i++)
+    {
+        refrmtd.data[2 * i] = objct.data[i] / 2;
+        refrmtd.data[2 * i + 1] = objct.data[i] % 2;
     }
 
     int casa;
     // bin to char
-    for (int i = 0; i < refrmtd.len/8; i++){
-        
+    for (int i = 0; i < refrmtd.len / 8; i++)
+    {
+
         casa = 0;
-        for (int j = i * 8, aux = 7; j < i * 8 + 8; j++, aux--){
+        for (int j = i * 8, aux = 7; j < i * 8 + 8; j++, aux--)
+        {
 
             casa += refrmtd.data[j] << aux;
         }
 
         asc[i] = casa;
-
     }
     printf("Criando e escrevendo o novo arquivo...\n");
-    FILE* hand = fopen(fname, "w");
+    FILE *hand = fopen(fname, "w");
 
     fputs(asc, hand);
 
@@ -466,15 +369,18 @@ void testa_a_porra_toda(int number_bits, int Nr, int Nt, int Ntstreams)
     free(refrmtd.data);
 }
 
-bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
+bfgs_vector rx_feq(bfgs_vector s, bfgs_matrix data)
+{
     bfgs_matrix ms = vec2matsqr(s);
     bfgs_matrix s_inv_sqr = inversa(ms);
-    
+
     bfgs_matrix meq = Produto_matricial(data, s_inv_sqr);
     matrix_print(meq);
     bfgs_vector veq = vector_alloc(data.M * data.N);
-    for (int i = 0; i < data.N; i++){
-        for (int j = 0; j < data.M; j++){
+    for (int i = 0; i < data.N; i++)
+    {
+        for (int j = 0; j < data.M; j++)
+        {
             vector_change(veq, (i * data.M) + j, matrix_get(meq, i, j));
         }
     }
@@ -483,7 +389,9 @@ bfgs_vector feq(bfgs_vector s, bfgs_matrix data){
     matrix_free(meq);
     return veq;
 }
-bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u){
+bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u)
+{
+    u = Transposta(u);
     bfgs_matrix comb = Produto_matricial(signal, u);
     return comb;
-}   
+}
