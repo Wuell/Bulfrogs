@@ -5,6 +5,8 @@
 #include "Pds_telecom.h"
 #include <time.h>
 
+///@file pds_telecom.c
+
 bfgs_vector tx_qam_mapper(bfgs_int_vector bits)
 {
 
