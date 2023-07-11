@@ -12,11 +12,11 @@ int main()
     int nstreams = 3;
     int nt = 5;
     int nr = 5;
-    //testa_a_porra_toda(12, 4, 4, 4);
+    // testa_a_porra_toda(12, 4, 4, 4);
 
     bfgs_int_vector tst = tx_data_read(".\\src\\pds\\Referencia");
 
-    bfgs_vector qam_mppr =  tx_qam_mapper(tst);
+    bfgs_vector qam_mppr = tx_qam_mapper(tst);
 
     verify_nstreams(nr, nt, nstreams);
 
@@ -28,25 +28,31 @@ int main()
     printf("Symbol\n");
     matrix_print(symbols);
     printf("channel\n");
-    matrix_print(channel);
-    
+
     bfgs_matrix chnnl_tr = channel_transmission(symbols, channel, 1);
+    matrix_print(chnnl_tr);
 
     bfgs_matrix u = matrix_alloc(nr, nstreams);
     bfgs_matrix v = matrix_alloc(nstreams, nstreams);
     bfgs_vector s = vector_alloc(nstreams);
     svd_channel(channel, u, v, s);
 
+    bfgs_matrix pre_cdr = tx_precoder(symbols, v);
 
     printf("eu vim aqui2\n");
-    bfgs_matrix pre_cdr = tx_precoder(chnnl_tr, v);
 
+    printf("Channel\n%d %d\n", chnnl_tr.M, chnnl_tr.N);
+    printf("U\n%d %d\n", u.M, u.N);
 
     bfgs_matrix cmbnr = rx_combiner(chnnl_tr, u);
 
-    //bfgs_vector lyr_dmppr = rx_layer_demapper(cmbnr);
+    printf("\ncombiner\n%d %d\n", cmbnr.M, cmbnr.N);
+    printf("s\n%d\n", s.len);
+
+    // bfgs_vector lyr_dmppr = rx_layer_demapper(cmbnr);
 
     bfgs_vector sym_eq = rx_feq(s, cmbnr);
+    printf("eu vim aqui3\n");
 
     bfgs_int_vector qm_dmppr = rx_qam_demapper(sym_eq);
 

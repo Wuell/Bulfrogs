@@ -1,9 +1,9 @@
 #ifndef PDS_TELECOM_H
 #define PDS_TELECOM_H
 
-bfgs_vector tx_qam_mapper(bfgs_int_vector bits);
+bfgs_vector tx_qam_mapper(int *bits, int number_bits);
 
-bfgs_int_vector rx_qam_demapper (bfgs_vector complex_vector);
+int *rx_qam_demapper(bfgs_vector complex_vector);
 
 void verify_nstreams(int Nr, int Nt, int Nstreams);
 
@@ -26,13 +26,5 @@ bfgs_matrix tx_precoder(bfgs_matrix signal,bfgs_matrix v);
 bfgs_vector rx_layer_demapper(bfgs_matrix complex_matrix);
 
 void testa_a_porra_toda(int number_bits,int Nr,int Nt, int Ntstreams);
-
-bfgs_int_vector tx_data_read(char* name);
-
-void rx_data_write(char* name, bfgs_int_vector objct);
-
-bfgs_vector rx_feq(bfgs_vector s, bfgs_matrix data);
-
-bfgs_matrix rx_combiner(bfgs_matrix signal, bfgs_matrix u);
 
 #endif
