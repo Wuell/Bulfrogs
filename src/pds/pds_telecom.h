@@ -29,17 +29,6 @@ bfgs_int_vector rx_qam_demapper(bfgs_vector complex_vector);
 
 void verify_nstreams(int Nr, int Nt, int Nstreams);
 
-<<<<<<< HEAD
-bfgs_matrix tx_layer_mapper(bfgs_vector Vector_QAM, int Nt, int Nstreams);
-
-bfgs_vector random_vector_com(int len, int intervalMod);
-
-int *random_vector_int(int len, int number_bits);
-
-bfgs_matrix channel_gen(int Nr, int Nt);
-
-bfgs_matrix noise(int Nr,int Nt, double intervalR);
-=======
 /**
  * @brief Agrupa os numeros complexos em uma matrix de simbolos (Numeros de antenas receptoras por Numeros de fluxos).
  *
@@ -81,7 +70,6 @@ bfgs_matrix channel_gen(int Nr, int Nt);
  */
 
 bfgs_matrix noise(int Nr, int Nt, double intervalR);
->>>>>>> 018246679c0344617044c64dd8d79c6cf8951bdc
 
 /**
  * @brief Gera o canal transmitido multiplicando os simbolos gerados no TX_LAYER_MAPPER
@@ -94,11 +82,6 @@ bfgs_matrix noise(int Nr, int Nt, double intervalR);
 
 bfgs_matrix channel_transmission(bfgs_matrix symbols, bfgs_matrix channel, double intervalR);
 
-<<<<<<< HEAD
-void svd_channel(bfgs_matrix channel,bfgs_matrix u,bfgs_matrix v,bfgs_vector s);
-
-bfgs_matrix tx_precoder(bfgs_matrix signal,bfgs_matrix v);
-=======
 /**
  * @brief Faz o calculo do svd
  *
@@ -120,7 +103,6 @@ void svd_channel(bfgs_matrix channel, bfgs_matrix u, bfgs_matrix v, bfgs_vector 
  */
 
 bfgs_matrix tx_precoder(bfgs_matrix signal, bfgs_matrix v);
->>>>>>> 018246679c0344617044c64dd8d79c6cf8951bdc
 
 /**
  * @brief Desfaz a matriz de simbolos em um vetor de numeros complexos
@@ -130,13 +112,6 @@ bfgs_matrix tx_precoder(bfgs_matrix signal, bfgs_matrix v);
 
 bfgs_vector rx_layer_demapper(bfgs_matrix complex_matrix);
 
-<<<<<<< HEAD
-void testa_a_porra_toda(int number_bits,int Nr,int Nt, int Ntstreams);
-
-bfgs_int_vector tx_data_read(char* name);
-
-void rx_data_write(char* name, bfgs_int_vector objct);
-=======
 /**
  * @brief Le um arquivo e converte em grupos de numeros decimais
  *
@@ -154,10 +129,21 @@ bfgs_int_vector tx_data_read(char *name);
  */
 
 void rx_data_write(char *name, bfgs_int_vector objct);
->>>>>>> 018246679c0344617044c64dd8d79c6cf8951bdc
 
 /**
- * @brief Equaliza o sinal recebido multiplicando pela matriz s invertida
+ * @brief Equaliza o sinal recebido divindo os elementos de cada stream pelos elementos de s.
+ * 
+ *
+ *
+ * @param s
+ * @param data
+ * @return bfgs_vector
+ */
+
+bfgs_vector rx_feq_2(bfgs_vector s, bfgs_vector data);
+
+/**
+ * @brief Equaliza o sinal recebido multiplicando pela matriz s invertida.
  *
  * @param s
  * @param data

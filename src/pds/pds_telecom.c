@@ -371,6 +371,15 @@ void rx_data_write(char *fname, bfgs_int_vector objct)
     free(refrmtd.data);
 }
 
+bfgs_vector rx_feq_2(bfgs_vector s, bfgs_vector data)
+{
+    bfgs_vector veq = vector_alloc(s.len);
+    for (int i = 0; i < s.len; i++){
+        veq.data[i].re = data.data[i].re / s.data[i].re;
+        veq.data[i].im = data.data[i].im / s.data[i].re;
+    }
+    return veq;
+}
 bfgs_vector rx_feq(bfgs_vector s, bfgs_matrix data)
 {
     bfgs_matrix ms = vec2matsqr(s);

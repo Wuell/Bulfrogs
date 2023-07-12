@@ -15,98 +15,100 @@ struct complexo // Define os complexos
 typedef struct complexo complexo;
 
 /**
- * @brief
+ * @brief Matriz de numeros complexos que armazena os itens da matriz como vetor e o acesso como matriz e injecao de dados sera feito
+ * atraves da funcao matriz_change().
  *
  */
 typedef struct bfgs_matrix
 {
 
-    /// @brief 
+    /// @brief Ponteiro de complexos que ira armazenar os dados da matriz como um vetor unidimensional.
     complexo *data;
-    /// @brief 
+    /// @brief Numero de linhas da matriz
     int M;
-    /// @brief 
+    /// @brief Numero de colunas da matriz
     int N;
-    /// @brief 
+    /// @brief Variavel para controlar a allocacao da matriz
     int is_alloc;
 
 } bfgs_matrix;
 
 /**
- * @brief
+ * @brief Vetor de complexos com variaveis de auxilio para o manuseio.
  *
  */
 typedef struct bfgs_vector
 {
 
-    /// @brief
+    /// @brief Ponteiro de complexos que ira armazenar os dados
     complexo *data;
-    /// @brief
+    /// @brief Tamanho do vetor
     int len;
-    /// @brief
+    /// @brief Variavel para controlar a alocacao do vetor
     int is_alloc;
 
 } bfgs_vector;
 /**
- * @brief 
+ * @brief Vetor de inteiros para facilitar manuseio desse vetor.
  * 
  */
 typedef struct bfgs_int_vector{
 
-    /// @brief 
+    /// @brief Vetor que ira armazenar os dados
     int* data; 
-    /// @brief
+    /// @brief Tamanho do vetor
     int  len;
 
 } bfgs_int_vector;
-//--------------------------matrix handle
+//----------------------------------------------------------------------------------------------------------matrix handle
 
 /**
- * @brief
- *
- * @param M
- * @param N
+ * @brief Cria uma matriz do tipo bgfs, inicia a array de dados do bfgs_matrix.data alocando o tamanho desejado na memoria,
+ * retornando o matriz alocado, passando o pointer para o vetor bfgs originador.
+ * @remark Deve ser usado da seguinte forma: bfgs_matrix nome_da_matriz = matrix_alloc(numero de linhas M, numero de colunas N);.
+ * @param M Numero de linhas
+ * @param N Numero de colunas
  * @return bfgs_matrix
  */
 bfgs_matrix matrix_alloc(int M, int N);
 
 /**
- * @brief
+ * @brief Libera da memoria a matriz m, previamente alocado.
  *
- * @param m
+ * @param v Matriz para ser liberado da memoria.
  */
 void matrix_free(bfgs_matrix m);
 
 /**
- * @brief
+ * @brief Retorna o numero complexo localizado na posicao m[M][N] do vetor.
  *
- * @param m
- * @param M
- * @param N
- * @return complexo
+ * @param v Matriz o qual ira ser acessada
+ * @param M Numero de linhas
+ * @param N Numero de colunas
+ * @return complexo Numero complexo ocupante da posicao m[M][N]
  */
 complexo matrix_get(bfgs_matrix m, int M, int N);
 
 /**
- * @brief
+ * @brief Substitui o elemento da celula mMXmN na matriz m pelo numero complexo a, em outras palavras m[M][N] = a.
  *
- * @param m
- * @param M
- * @param N
- * @param v
+ * @param m Matriz que a qual sera alterada
+ * @param M Linha do elemento
+ * @param N Coluna do elemento
+ * @param v Numero que ira assumir a posicao m[M][N]
  */
 void matrix_change(bfgs_matrix m, int M, int N, complexo v);
 
 /**
- * @brief
+ * @brief Imprime a matriz ma no terminal.
  *
- * @param ma
+ * @param ma Matriz que sera impressa
  */
 void matrix_print(bfgs_matrix ma);
 
 //---------------------------------------------------------------------------------------------------------------vector handle
 /**
- * @brief Cria uma vetor do tipo bgfs, inicia a array de dados do bfgs_vector.data alocando o tamanho desejado na memoria,
+ * @brief Cria um vetor do tipo bgfs, inicia a array de dados do bfgs_vector.data alocando o tamanho desejado na memoria,
  * retornando o vetor alocado, passando o pointer para o vetor bfgs originador.
  * @remark Deve ser usado da seguinte forma: bfgs_vector nome_do_vetor = vector_alloc(tamanho desejado);.
  *
@@ -125,34 +127,37 @@ void vector_free(bfgs_vector v);
 /**
  * @brief Retorna o numero complexo localizado na posicao V[m] do vetor.
  *
- * @param v Vetor o qual ira ser retirado.
+ * @param v Vetor o qual ira ser acessado
  * @param M posicao desejada.
  * @return complexo Numero complexo ocupante da posicao.
  */
 complexo vector_get(bfgs_vector v, int M);
 
 /**
- * @brief
+ * @brief Substitui o elemento da celula M no vetor v pelo numero complexo a , em outras palavras v[m] = a.
  *
- * @param v
- * @param M
- * @param a
+ * @param v vetor a ser alterado
+ * @param M celula a ser alterada
+ * @param a numero que vai ser posto na posicao v[m]
  */
 void vector_change(bfgs_vector v, int M, complexo a);
 
 /**
- * @brief
+ * @brief Imprime o vetor v no terminal.
  *
- * @param v
+ * @param v vetor a ser impresso no terminal.
  */
 void vector_print(bfgs_vector v);
 
 //-------------------------------------------------------------------------Miscellaneous
+/**
+ * @brief Aloca o vetor de tamanho (len) e retorna o ponteiro para a array.
+ * 
+ * @param len tamanho do vetor
+ * @return ponteiro para o vetor 
+ */
 bfgs_int_vector int_vector_alloc(int len);
 
-//-------------------------Miscellaneous
-
-//-------------------------PRINTERS
 char* char_vector_alloc(int len);
 
 bfgs_matrix vec2matsqr(bfgs_vector v);
@@ -177,12 +182,9 @@ void teste_transposta();
 /**
  *Calcula a transposta da matriz A e armazena na matriz disponibilizada.
  *
- * @param[in] tamanho da matriz
- * @param[in] A
- * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado
- * @param[out] Transposta de A
+ * @param[in] Ma
+ * @return Transposta de A
  */
-
 bfgs_matrix Transposta(bfgs_matrix ma);
 
 //-------------------------CONJUGADA
@@ -193,9 +195,7 @@ void teste_conjugada();
 /**
  *Calcula a conjugada da matriz A e armazena na matriz disponibilizada.
  *
- * @param[in] tamanho da matriz
  * @param[in] A
- * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado
  * @param[out] Conjugada de A
  */
 void Conjugada(bfgs_matrix m, bfgs_matrix mc);
@@ -206,12 +206,10 @@ void Conjugada(bfgs_matrix m, bfgs_matrix mc);
 void teste_hermitiana();
 
 /**
- *Calcula a hermitiana da matriz A e armazena na matriz disponibilizada Resultado.
+ *Calcula a hermitiana da matriz A.
  *
- * @param[in] tamanho da matriz
- * @param[in] A
- * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
- * @param[out] Hermitiana de A
+ * @param[in]  A
+ * @return Hermitiana de A
  */
 bfgs_matrix Hermitiana(bfgs_matrix m);
 
@@ -223,11 +221,9 @@ void teste_soma();
 /**
  *Calcula a soma entre as matrizes A e B e armazena o resultado na matriz disponibilizada Resultado.
  *
- * @param[in] tamanho das matrizes
  * @param[in] A
  * @param[in] B
- * @param[in] Resultado matriz pre alocada na memoria para receber o resultado.
- * @param[out] A somada de B
+ * @return O resultado de A + B
  */
 bfgs_matrix Soma(bfgs_matrix ma, bfgs_matrix mb);
 
@@ -239,10 +235,8 @@ void teste_subtracao();
 /**
  *Calcula a subtracao entre as matrizes A e B e armazena o resultado na matriz disponibilizada Resultado.
  *
- * @param[in] tamanho das matrizes
  * @param[in] A
  * @param[in] B
- * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
  * @param[out] Subtracao de B em A
  */
 void Subtracao(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
@@ -253,15 +247,12 @@ void Subtracao(bfgs_matrix ma, bfgs_matrix mb, bfgs_matrix ans);
 void teste_produto_escalar();
 
 /**
- *Calcula o produto escalar entre os vetores A e B e armazena o resultado no vetor disponibilizado Resultado.
+ *Calcula o produto escalar entre os vetores A e B.
  *
- * @param[in] tamanho dos vetores
  * @param[in] Vetor A
  * @param[in] Vetor B
- * @param[in] Resultado Vetor pre alocado na memoria para receber o resultado
- * @param[out] Produto entre A e B
+ * @return Produto entre A e B
  */
-
 complexo Produto_escalar(bfgs_vector va, bfgs_vector vb);
 
 //-------------------------PRODUTO MATRICIAL
@@ -270,27 +261,25 @@ complexo Produto_escalar(bfgs_vector va, bfgs_vector vb);
 void teste_produto_matricial();
 
 /**
- * Calcula o produto entre as matrizes A e B e armazena o resultado na matriz disponibilizada Resultado.
+ * Calcula o produto entre as matrizes A e B.
  *
- * @param[in] tamanho das matrizes
  * @param[in] A
  * @param[in] B
- * @param[in] Resultado Matriz pre alocada na memoria para receber o resultado.
- * @param[out] Produto entre A e B
+ * @return Resultado da multiplicação
  */
 bfgs_matrix Produto_matricial(bfgs_matrix ma, bfgs_matrix mb);
 
 //-------------------------PRODUTO COMPLEXO
 
-/// Teste da funcao Produto complexo
+/// Teste da funcao Produto complexo com casos teste.
 void teste_produto_complexo();
 
 /**
- * Calcula o produto entre os numeros complexos A e B.
+ * Calcula o produto entre os numeros complexos A e B e armazena os dados na variavel que chamou.
  *
  * @param[in] Numero A
  * @param[in] Numero B
- * @param[out] Produto entre A e B
+ * @return Produto entre A e B
  */
 complexo produto_complexo(complexo ma, complexo na);
 
